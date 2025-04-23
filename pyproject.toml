@@ -1,0 +1,11 @@
+[project]
+name = "nchu-ai-introduction"
+version = "0.1.0"
+description = "NCHU【人工智慧概論】課程作業"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "jupyterlab>=4.4.1",
+    "numpy>=2.2.5",
+    "pandas>=2.2.3",
+]
