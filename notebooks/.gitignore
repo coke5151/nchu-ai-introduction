@@ -1,5 +1,2 @@
 # ignore training data/
 data/
-
-# ignore TeXworks data
-*.synctex.gz
