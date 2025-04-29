@@ -1,0 +1,1288 @@
+\documentclass[11pt]{article}
+
+    \usepackage{fontspec}
+    \usepackage[slantfont, boldfont]{xeCJK}
+    \setmainfont{Times New Roman} 
+    \setCJKmainfont{標楷體}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \makeatletter
+    \newsavebox\pandoc@box
+    \newcommand*\pandocbounded[1]{%
+      \sbox\pandoc@box{#1}%
+      % scaling factors for width and height
+      \Gscale@div\@tempa\textheight{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+      \Gscale@div\@tempb\linewidth{\wd\pandoc@box}%
+      % select the smaller of both
+      \ifdim\@tempb\p@<\@tempa\p@
+        \let\@tempa\@tempb
+      \fi
+      % scaling accordingly (\@tempa < 1)
+      \ifdim\@tempa\p@<\p@
+        \scalebox{\@tempa}{\usebox\pandoc@box}%
+      % scaling not needed, use as it is
+      \else
+        \usebox{\pandoc@box}%
+      \fi
+    }
+    \makeatother
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{AI Introduction Homework 2}
+    \author{4112064214 侯竣奇}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \section{Summary}\label{summary}
+
+這個 Jupyter Notebook 的目標是使用 NumPy 從頭開始實作一個簡單的
+ANN，用於 Pima Indians Diabetes 資料集的糖尿病分類任務。涵蓋了以下步驟：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{資料處理}: 從 Kaggle Hub 載入資料集、處理缺失值 (將特定欄位的
+  0 值替換為中位數) 、將特徵和目標變數分開、打亂資料順序並分割為訓練集
+  (80\%) 和測試集 (20\%) ，最後使用訓練集的最小最大值對資料進行 Min-Max
+  標準化。
+\item
+  \textbf{建立神經網路}: 實作包含一個隱藏層 (使用 ReLU 或
+  Sig\textbar moid 激活函數) 和一個輸出層 (使用 Sigmoid 激活函數) 的簡單
+  ANN。使用平方誤差作為損失函數。
+\item
+  \textbf{訓練}: 使用隨機梯度下降法
+  (SGD)，一次處理一個樣本，對模型進行訓練。
+\item
+  \textbf{評估}:
+  繪製訓練過程中的損失曲線，並在測試集上評估模型的準確率和混淆矩陣。
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{enum}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{Enum}
+\PY{c+c1}{\PYZsh{} 用 Enum 來表示 Activation Function，只能二擇一}
+\PY{k}{class}\PY{+w}{ }\PY{n+nc}{ActivationFunction}\PY{p}{(}\PY{n}{Enum}\PY{p}{)}\PY{p}{:}
+    \PY{n}{SIGMOID} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sigmoid}\PY{l+s+s1}{\PYZsq{}}
+    \PY{n}{RELU} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{relu}\PY{l+s+s1}{\PYZsq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Step 0: 設定參數}\label{step-0-ux8a2dux5b9aux53c3ux6578}
+
+可以在這裡設定一些 const 的參數值
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{TEST\PYZus{}SPLIT} \PY{o}{=} \PY{l+m+mf}{0.2} \PY{c+c1}{\PYZsh{} 分割測試集的比例}
+\PY{n}{RANDOM\PYZus{}SEED} \PY{o}{=} \PY{l+m+mi}{42} \PY{c+c1}{\PYZsh{} 亂數種子}
+
+\PY{n}{INPUT\PYZus{}SIZE} \PY{o}{=} \PY{l+m+mi}{8}           \PY{c+c1}{\PYZsh{} 特徵數量 (固定為 8)}
+\PY{n}{HIDDEN\PYZus{}SIZE} \PY{o}{=} \PY{l+m+mi}{16}         \PY{c+c1}{\PYZsh{} 隱藏層大小 (可調整，例如 8, 16, 32)}
+\PY{n}{OUTPUT\PYZus{}SIZE} \PY{o}{=} \PY{l+m+mi}{1}          \PY{c+c1}{\PYZsh{} 輸出層大小 (固定為 1，二元分類)}
+\PY{n}{HIDDEN\PYZus{}ACTIVATION} \PY{o}{=} \PY{n}{ActivationFunction}\PY{o}{.}\PY{n}{RELU} \PY{c+c1}{\PYZsh{} 隱藏層激活函數 (relu 或 sigmoid)}
+\PY{n}{EPOCHS} \PY{o}{=} \PY{l+m+mi}{1500}            \PY{c+c1}{\PYZsh{} 訓練輪數 (可調整，例如 1000, 2000)}
+\PY{n}{LEARNING\PYZus{}RATE} \PY{o}{=} \PY{l+m+mf}{0.01}     \PY{c+c1}{\PYZsh{} 學習率 (可調整，例如 0.1, 0.01, 0.001)}
+\PY{n}{VERBOSE\PYZus{}STEP} \PY{o}{=} \PY{l+m+mi}{100}       \PY{c+c1}{\PYZsh{} 每隔多少輪印出一次損失}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Step 1: Data Processing}\label{step-1-data-processing}
+
+    \subsection{1.1 取得資料}\label{ux53d6ux5f97ux8cc7ux6599}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{kagglehub}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+d:\textbackslash{}Repos\textbackslash{}nchu-ai-introduction\textbackslash{}.venv\textbackslash{}Lib\textbackslash{}site-packages\textbackslash{}tqdm\textbackslash{}auto.py:21:
+TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See
+https://ipywidgets.readthedocs.io/en/stable/user\_install.html
+  from .autonotebook import tqdm as notebook\_tqdm
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{path} \PY{o}{=} \PY{n}{kagglehub}\PY{o}{.}\PY{n}{dataset\PYZus{}download}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{uciml/pima\PYZhy{}indians\PYZhy{}diabetes\PYZhy{}database}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{path}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+'C:\textbackslash{}\textbackslash{}Users\textbackslash{}\textbackslash{}User\textbackslash{}\textbackslash{}.cache\textbackslash{}\textbackslash{}kagglehub\textbackslash{}\textbackslash{}datasets\textbackslash{}\textbackslash{}uciml\textbackslash{}\textbackslash{}pima-indians-diabetes-
+database\textbackslash{}\textbackslash{}versions\textbackslash{}\textbackslash{}1'
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{pandas}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{pd}
+\PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{path} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/diabetes.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   Pregnancies  Glucose  BloodPressure  SkinThickness  Insulin   BMI  \textbackslash{}
+0            6      148             72             35        0  33.6
+1            1       85             66             29        0  26.6
+2            8      183             64              0        0  23.3
+3            1       89             66             23       94  28.1
+4            0      137             40             35      168  43.1
+
+   DiabetesPedigreeFunction  Age  Outcome
+0                     0.627   50        1
+1                     0.351   31        0
+2                     0.672   32        1
+3                     0.167   21        0
+4                     2.288   33        1
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       Pregnancies     Glucose  BloodPressure  SkinThickness     Insulin  \textbackslash{}
+count   768.000000  768.000000     768.000000     768.000000  768.000000
+mean      3.845052  120.894531      69.105469      20.536458   79.799479
+std       3.369578   31.972618      19.355807      15.952218  115.244002
+min       0.000000    0.000000       0.000000       0.000000    0.000000
+25\%       1.000000   99.000000      62.000000       0.000000    0.000000
+50\%       3.000000  117.000000      72.000000      23.000000   30.500000
+75\%       6.000000  140.250000      80.000000      32.000000  127.250000
+max      17.000000  199.000000     122.000000      99.000000  846.000000
+
+              BMI  DiabetesPedigreeFunction         Age     Outcome
+count  768.000000                768.000000  768.000000  768.000000
+mean    31.992578                  0.471876   33.240885    0.348958
+std      7.884160                  0.331329   11.760232    0.476951
+min      0.000000                  0.078000   21.000000    0.000000
+25\%     27.300000                  0.243750   24.000000    0.000000
+50\%     32.000000                  0.372500   29.000000    0.000000
+75\%     36.600000                  0.626250   41.000000    1.000000
+max     67.100000                  2.420000   81.000000    1.000000
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsection{1.2 處理缺失值}\label{ux8655ux7406ux7f3aux5931ux503c}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Pregnancies                 0
+Glucose                     0
+BloodPressure               0
+SkinThickness               0
+Insulin                     0
+BMI                         0
+DiabetesPedigreeFunction    0
+Age                         0
+Outcome                     0
+dtype: int64
+\end{Verbatim}
+\end{tcolorbox}
+        
+    從 \texttt{df.describe()} 結果可以看到沒有 null 值\\
+接著處理缺失值直接被填為 0 的情況
+
+    各個 Feature 如下：
+
+\begin{itemize}
+\tightlist
+\item
+  Pregnacies 懷孕次數：可能為 0
+\item
+  Glucose：血糖：不可能為 0
+\item
+  BloodPressure 血壓：不可能為 0
+\item
+  SkinThickness 皮膚厚度：不可能為 0
+\item
+  Insulin 胰島素濃度：極罕見情況下才會為 0
+\item
+  BMI：不可能為 0
+\item
+  DiabetesPedigreeFunction 糖尿病家族函數：在 df.describe() 可以看到沒有
+  0
+\item
+  Age 年齡：這個資料集中最少為 21 歲，df.describe() 中可看到最小是 21
+  沒有問題
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 該處理 0 值的欄位：}
+\PY{n}{cols\PYZus{}to\PYZus{}impute} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Glucose}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BloodPressure}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SkinThickness}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Insulin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BMI}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{cols\PYZus{}to\PYZus{}impute}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} 計算非零值的中位數}
+    \PY{n}{median\PYZus{}val} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{n}{col}\PY{p}{]} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{col}\PY{p}{]}\PY{o}{.}\PY{n}{median}\PY{p}{(}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} 將 0 替換為中位數}
+    \PY{n}{df}\PY{p}{[}\PY{n}{col}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{col}\PY{p}{]}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{median\PYZus{}val}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} 看一下處理完的資料}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       Pregnancies     Glucose  BloodPressure  SkinThickness     Insulin  \textbackslash{}
+count   768.000000  768.000000     768.000000     768.000000  768.000000
+mean      3.845052  121.656250      72.386719      29.108073  140.671875
+std       3.369578   30.438286      12.096642       8.791221   86.383060
+min       0.000000   44.000000      24.000000       7.000000   14.000000
+25\%       1.000000   99.750000      64.000000      25.000000  121.500000
+50\%       3.000000  117.000000      72.000000      29.000000  125.000000
+75\%       6.000000  140.250000      80.000000      32.000000  127.250000
+max      17.000000  199.000000     122.000000      99.000000  846.000000
+
+              BMI  DiabetesPedigreeFunction         Age     Outcome
+count  768.000000                768.000000  768.000000  768.000000
+mean    32.455208                  0.471876   33.240885    0.348958
+std      6.875177                  0.331329   11.760232    0.476951
+min     18.200000                  0.078000   21.000000    0.000000
+25\%     27.500000                  0.243750   24.000000    0.000000
+50\%     32.300000                  0.372500   29.000000    0.000000
+75\%     36.600000                  0.626250   41.000000    1.000000
+max     67.100000                  2.420000   81.000000    1.000000
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsection{1.3 分離 feature 與
+outcome}\label{ux5206ux96e2-feature-ux8207-outcome}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{numpy}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{np}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Outcome}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{values}
+\PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Outcome}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)} \PY{c+c1}{\PYZsh{} 確保 y 是 (n\PYZus{}samples, 1) 的形狀}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([[  6.   , 148.   ,  72.   , {\ldots},  33.6  ,   0.627,  50.   ],
+       [  1.   ,  85.   ,  66.   , {\ldots},  26.6  ,   0.351,  31.   ],
+       [  8.   , 183.   ,  64.   , {\ldots},  23.3  ,   0.672,  32.   ],
+       {\ldots},
+       [  5.   , 121.   ,  72.   , {\ldots},  26.2  ,   0.245,  30.   ],
+       [  1.   , 126.   ,  60.   , {\ldots},  30.1  ,   0.349,  47.   ],
+       [  1.   ,  93.   ,  70.   , {\ldots},  30.4  ,   0.315,  23.   ]],
+      shape=(768, 8))
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([[1],
+       [0],
+       [1],
+       [0],
+       [1]])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{x}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{y}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+(768, 8)
+(768, 1)
+    \end{Verbatim}
+
+    可以看到 X 跟 y 可以一一對應，正確
+
+    \subsection{1.4
+打亂資料並分割}\label{ux6253ux4e82ux8cc7ux6599ux4e26ux5206ux5272}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{n}{RANDOM\PYZus{}SEED}\PY{p}{)}
+\PY{n}{indices} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{x}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} 產生一個索引列表}
+\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 打亂索引列表}
+\PY{n}{x} \PY{o}{=} \PY{n}{x}\PY{p}{[}\PY{n}{indices}\PY{p}{]} \PY{c+c1}{\PYZsh{} 使用打亂後的索引來排 X}
+\PY{n}{y} \PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{indices}\PY{p}{]} \PY{c+c1}{\PYZsh{} 使用打亂後的索引來排 y}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 分割資料為訓練集和測試集}
+\PY{n}{split\PYZus{}idx} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{x}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{TEST\PYZus{}SPLIT}\PY{p}{)}\PY{p}{)}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test} \PY{o}{=} \PY{n}{x}\PY{p}{[}\PY{p}{:}\PY{n}{split\PYZus{}idx}\PY{p}{]}\PY{p}{,} \PY{n}{x}\PY{p}{[}\PY{n}{split\PYZus{}idx}\PY{p}{:}\PY{p}{]}
+\PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{p}{:}\PY{n}{split\PYZus{}idx}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{split\PYZus{}idx}\PY{p}{:}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    在分割完資料集以後我們需要把資料進行 Normalize
+
+\begin{itemize}
+\tightlist
+\item
+  值得注意的是這裡我只使用\textbf{訓練集}來計算 min,
+  max，再一起應用到訓練集及測試集
+\item
+  這樣可以避免資料探勘的常見錯誤：拿未來的資料（測試集的資料我們訓練時不應該知道）來做訓練
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 標準化 (Min\PYZhy{}Max Scaling 到 0\PYZhy{}1 的範圍)}
+\PY{c+c1}{\PYZsh{} 注意：只在訓練集上計算 min 和 max，然後應用到訓練集和測試集}
+\PY{n}{min\PYZus{}vals} \PY{o}{=} \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{max\PYZus{}vals} \PY{o}{=} \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 防止除以零}
+\PY{n}{range\PYZus{}vals} \PY{o}{=} \PY{n}{max\PYZus{}vals} \PY{o}{\PYZhy{}} \PY{n}{min\PYZus{}vals}
+\PY{n}{range\PYZus{}vals}\PY{p}{[}\PY{n}{range\PYZus{}vals} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1} \PY{c+c1}{\PYZsh{} 如果某特徵所有值都相同時，避免除以零}
+
+\PY{n}{X\PYZus{}train} \PY{o}{=} \PY{p}{(}\PY{n}{X\PYZus{}train} \PY{o}{\PYZhy{}} \PY{n}{min\PYZus{}vals}\PY{p}{)} \PY{o}{/} \PY{n}{range\PYZus{}vals}
+\PY{n}{X\PYZus{}test} \PY{o}{=} \PY{p}{(}\PY{n}{X\PYZus{}test} \PY{o}{\PYZhy{}} \PY{n}{min\PYZus{}vals}\PY{p}{)} \PY{o}{/} \PY{n}{range\PYZus{}vals} \PY{c+c1}{\PYZsh{} 使用訓練集的 min/max 標準化測試集}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{資料載入與預處理完成。}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{訓練集大小: }\PY{l+s+si}{\PYZob{}}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ 樣本}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{測試集大小: }\PY{l+s+si}{\PYZob{}}\PY{n}{X\PYZus{}test}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ 樣本}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{特徵數量: }\PY{l+s+si}{\PYZob{}}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+資料載入與預處理完成。
+訓練集大小: 614 樣本
+測試集大小: 154 樣本
+特徵數量: 8
+    \end{Verbatim}
+
+    \section{Step 2 + 3: Build Neural Network \& Training
+Loop}\label{step-2-3-build-neural-network-training-loop}
+
+這一步我們創建一個 SimpleANN，並且把 Training 實作在 Class 裡
+
+    \subsection{2.1 Activation Function}\label{activation-function}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{sigmoid}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Sigmoid activation function\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{c+c1}{\PYZsh{} 防止 overflow}
+    \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{clip}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{500}\PY{p}{,} \PY{l+m+mi}{500}\PY{p}{)}
+    \PY{k}{return} \PY{l+m+mi}{1} \PY{o}{/} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{p}{)}\PY{p}{)}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{sigmoid\PYZus{}derivative}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Sigmoid activation function 的 derivative\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{s} \PY{o}{=} \PY{n}{sigmoid}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+    \PY{k}{return} \PY{n}{s} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{s}\PY{p}{)}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{relu}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}ReLU activation function\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{maximum}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{relu\PYZus{}derivative}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}ReLU activation function 的 derivative\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{x} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{2.2 Loss Function}\label{loss-function}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{square\PYZus{}error\PYZus{}loss}\PY{p}{(}\PY{n}{y\PYZus{}true}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}平方誤差損失函數\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{return} \PY{l+m+mf}{0.5} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{(}\PY{n}{y\PYZus{}pred} \PY{o}{\PYZhy{}} \PY{n}{y\PYZus{}true}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{square\PYZus{}error\PYZus{}loss\PYZus{}derivative}\PY{p}{(}\PY{n}{y\PYZus{}true}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}平方誤差損失函數的導數\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{return} \PY{n}{y\PYZus{}pred} \PY{o}{\PYZhy{}} \PY{n}{y\PYZus{}true}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{2.3 實作 SimpleANN
+Class}\label{ux5be6ux4f5c-simpleann-class}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{time}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{class}\PY{+w}{ }\PY{n+nc}{SimpleANN}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    一個簡單的 NumPy 實現的 ANN。}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf+fm}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}
+        \PY{n+nb+bp}{self}\PY{p}{,}
+        \PY{n}{input\PYZus{}size}\PY{p}{,}
+        \PY{n}{hidden\PYZus{}size}\PY{p}{,}
+        \PY{n}{output\PYZus{}size}\PY{p}{,}
+        \PY{n}{hidden\PYZus{}activation}\PY{p}{:} \PY{n}{ActivationFunction} \PY{o}{=} \PY{n}{ActivationFunction}\PY{o}{.}\PY{n}{RELU}\PY{p}{,}
+        \PY{n}{seed}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,}
+    \PY{p}{)}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{        初始化神經網路。}
+
+\PY{l+s+sd}{        Args:}
+\PY{l+s+sd}{            input\PYZus{}size (int): 輸入層神經元數量 (特徵數)。}
+\PY{l+s+sd}{            hidden\PYZus{}size (int): 隱藏層神經元數量。}
+\PY{l+s+sd}{            output\PYZus{}size (int): 輸出層神經元數量 (通常為 1 用於二元分類)。}
+\PY{l+s+sd}{            hidden\PYZus{}activation (str): 隱藏層激活函數 (relu 或 sigmoid)，是 Enum。}
+\PY{l+s+sd}{            seed (int): 權重初始化的隨機種子。}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{input\PYZus{}size} \PY{o}{=} \PY{n}{input\PYZus{}size}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}size} \PY{o}{=} \PY{n}{hidden\PYZus{}size}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{output\PYZus{}size} \PY{o}{=} \PY{n}{output\PYZus{}size}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{seed} \PY{o}{=} \PY{n}{seed}
+        \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{seed}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 權重初始化 (Xavier/Glorot initialization 變體)}
+        \PY{c+c1}{\PYZsh{} 這有助於防止梯度消失或爆炸}
+        \PY{n}{limit\PYZus{}w1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{l+m+mf}{6.0} \PY{o}{/} \PY{p}{(}\PY{n}{input\PYZus{}size} \PY{o}{+} \PY{n}{hidden\PYZus{}size}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{W1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{limit\PYZus{}w1}\PY{p}{,} \PY{n}{limit\PYZus{}w1}\PY{p}{,} \PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{input\PYZus{}size}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}size}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}size}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} 初始化 bias 為 0}
+
+        \PY{n}{limit\PYZus{}w2} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{l+m+mf}{6.0} \PY{o}{/} \PY{p}{(}\PY{n}{hidden\PYZus{}size} \PY{o}{+} \PY{n}{output\PYZus{}size}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{W2} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{limit\PYZus{}w2}\PY{p}{,} \PY{n}{limit\PYZus{}w2}\PY{p}{,} \PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}size}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{output\PYZus{}size}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b2} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{output\PYZus{}size}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} 初始化 bias 為 0}
+
+        \PY{c+c1}{\PYZsh{} 選擇隱藏層 Activation Function}
+        \PY{k}{if} \PY{n}{hidden\PYZus{}activation} \PY{o}{==} \PY{n}{ActivationFunction}\PY{o}{.}\PY{n}{RELU}\PY{p}{:}
+            \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}activation} \PY{o}{=} \PY{n}{relu}
+            \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}activation\PYZus{}derivative} \PY{o}{=} \PY{n}{relu\PYZus{}derivative}
+        \PY{k}{elif} \PY{n}{hidden\PYZus{}activation} \PY{o}{==} \PY{n}{ActivationFunction}\PY{o}{.}\PY{n}{SIGMOID}\PY{p}{:}
+            \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}activation} \PY{o}{=} \PY{n}{sigmoid}
+            \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}activation\PYZus{}derivative} \PY{o}{=} \PY{n}{sigmoid\PYZus{}derivative}
+        \PY{k}{else}\PY{p}{:}
+            \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{隱藏層激活函數必須是 ActivationFunction.RELU }\PY{l+s+s2}{\PYZdq{}} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{或 ActivationFunction.SIGMOID}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 輸出層固定使用 Sigmoid}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{output\PYZus{}activation} \PY{o}{=} \PY{n}{sigmoid}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{output\PYZus{}activation\PYZus{}derivative} \PY{o}{=} \PY{n}{sigmoid\PYZus{}derivative}
+
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{神經網路初始化完成:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} 輸入層大小: }\PY{l+s+si}{\PYZob{}}\PY{n}{input\PYZus{}size}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} 隱藏層大小: }\PY{l+s+si}{\PYZob{}}\PY{n}{hidden\PYZus{}size}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} 輸出層大小: }\PY{l+s+si}{\PYZob{}}\PY{n}{output\PYZus{}size}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} 隱藏層激活函數: }\PY{l+s+si}{\PYZob{}}\PY{n}{hidden\PYZus{}activation}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} 輸出層激活函數: sigmoid}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{forward}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X}\PY{p}{)}\PY{p}{:}  \PY{c+c1}{\PYZsh{} noqa: N803}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{        執行前向傳播。}
+
+\PY{l+s+sd}{        Args:}
+\PY{l+s+sd}{            X (np.ndarray): 輸入資料，形狀為 (n\PYZus{}samples, input\PYZus{}size)。}
+
+\PY{l+s+sd}{        Returns:}
+\PY{l+s+sd}{            tuple: (hidden\PYZus{}layer\PYZus{}output, final\PYZus{}output)}
+\PY{l+s+sd}{                    包含隱藏層和輸出層的輸出。}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{c+c1}{\PYZsh{} 輸入層到隱藏層}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z1} \PY{o}{=} \PY{n}{X} \PY{o}{@} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{W1} \PY{o}{+} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b1}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a1} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}activation}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z1}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 隱藏層到輸出層}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z2} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a1} \PY{o}{@} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{W2} \PY{o}{+} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b2}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a2} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{output\PYZus{}activation}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z2}\PY{p}{)}  \PY{c+c1}{\PYZsh{} 最終輸出}
+
+        \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a1}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a2}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{backward}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{y\PYZus{}true}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{)}\PY{p}{:}  \PY{c+c1}{\PYZsh{} noqa: N803}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{        執行反向傳播並計算梯度。}
+
+\PY{l+s+sd}{        Args:}
+\PY{l+s+sd}{            X (np.ndarray): 單個輸入樣本，形狀為 (1, input\PYZus{}size)。}
+\PY{l+s+sd}{            y\PYZus{}true (np.ndarray): 單個真實標籤，形狀為 (1, output\PYZus{}size)。}
+\PY{l+s+sd}{            y\PYZus{}pred (np.ndarray): 單個預測輸出，形狀為 (1, output\PYZus{}size)。}
+
+\PY{l+s+sd}{        Returns:}
+\PY{l+s+sd}{            tuple: (dW1, db1, dW2, db2)}
+\PY{l+s+sd}{                    權重和偏置的梯度。}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{c+c1}{\PYZsh{} 計算輸出層的誤差和梯度}
+        \PY{c+c1}{\PYZsh{} 損失函數對輸出層激活值的導數 * 輸出層激活函數對其輸入的導數}
+        \PY{n}{delta\PYZus{}output} \PY{o}{=} \PY{n}{square\PYZus{}error\PYZus{}loss\PYZus{}derivative}\PY{p}{(}\PY{n}{y\PYZus{}true}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{)} \PY{o}{*} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{output\PYZus{}activation\PYZus{}derivative}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z2}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} (1, output\PYZus{}size)}
+
+        \PY{c+c1}{\PYZsh{} 計算隱藏層的誤差和梯度}
+        \PY{c+c1}{\PYZsh{} 輸出層誤差 @ W2 的轉置 * 隱藏層激活函數對其輸入的導數}
+        \PY{n}{delta\PYZus{}hidden} \PY{o}{=} \PY{p}{(}\PY{n}{delta\PYZus{}output} \PY{o}{@} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{W2}\PY{o}{.}\PY{n}{T}\PY{p}{)} \PY{o}{*} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{hidden\PYZus{}activation\PYZus{}derivative}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z1}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} (1, hidden\PYZus{}size)}
+
+        \PY{c+c1}{\PYZsh{} 計算權重和偏置的梯度}
+        \PY{c+c1}{\PYZsh{} 梯度 = 上一層的激活值轉置 @ 當前層的誤差}
+        \PY{n}{dW2} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a1}\PY{o}{.}\PY{n}{T} \PY{o}{@} \PY{n}{delta\PYZus{}output}  \PY{c+c1}{\PYZsh{} noqa: N806}
+        \PY{c+c1}{\PYZsh{} (hidden\PYZus{}size, 1) @ (1, output\PYZus{}size) \PYZhy{}\PYZgt{} (hidden\PYZus{}size, output\PYZus{}size)}
+        \PY{n}{db2} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{delta\PYZus{}output}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}  \PY{c+c1}{\PYZsh{} (1, output\PYZus{}size)}
+
+        \PY{n}{dW1} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{T} \PY{o}{@} \PY{n}{delta\PYZus{}hidden}  \PY{c+c1}{\PYZsh{} (input\PYZus{}size, 1) @ (1, hidden\PYZus{}size) \PYZhy{}\PYZgt{} (input\PYZus{}size, hidden\PYZus{}size)  \PYZsh{} noqa: N806}
+        \PY{n}{db1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{delta\PYZus{}hidden}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}  \PY{c+c1}{\PYZsh{} (1, hidden\PYZus{}size)}
+
+        \PY{k}{return} \PY{n}{dW1}\PY{p}{,} \PY{n}{db1}\PY{p}{,} \PY{n}{dW2}\PY{p}{,} \PY{n}{db2}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{update\PYZus{}weights}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{dW1}\PY{p}{,} \PY{n}{db1}\PY{p}{,} \PY{n}{dW2}\PY{p}{,} \PY{n}{db2}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{p}{)}\PY{p}{:}  \PY{c+c1}{\PYZsh{} noqa: N803}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{        使用 SGD 更新 weight 和 bias。}
+
+\PY{l+s+sd}{        Args:}
+\PY{l+s+sd}{            dW1, db1, dW2, db2: 梯度。}
+\PY{l+s+sd}{            learning\PYZus{}rate (float): 學習率。}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{W1} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{dW1}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b1} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{db1}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{W2} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{dW2}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b2} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{db2}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{train}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{epochs}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{p}{,} \PY{n}{verbose}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}  \PY{c+c1}{\PYZsh{} noqa: N803}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{        訓練神經網路。}
+
+\PY{l+s+sd}{        Args:}
+\PY{l+s+sd}{            X\PYZus{}train (np.ndarray): 訓練特徵。}
+\PY{l+s+sd}{            y\PYZus{}train (np.ndarray): 訓練標籤。}
+\PY{l+s+sd}{            epochs (int): 訓練的輪數。}
+\PY{l+s+sd}{            learning\PYZus{}rate (float): 學習率。}
+\PY{l+s+sd}{            verbose (int): 每隔多少輪印出一次損失。}
+
+\PY{l+s+sd}{        Returns:}
+\PY{l+s+sd}{            list: 每輪的平均損失列表。}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n}{start\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+        \PY{n}{losses} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{n}{n\PYZus{}samples} \PY{o}{=} \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{開始訓練...}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} Epochs: }\PY{l+s+si}{\PYZob{}}\PY{n}{epochs}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} Learning Rate: }\PY{l+s+si}{\PYZob{}}\PY{n}{learning\PYZus{}rate}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} 訓練樣本數: }\PY{l+s+si}{\PYZob{}}\PY{n}{n\PYZus{}samples}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+        \PY{k}{for} \PY{n}{epoch} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{epochs}\PY{p}{)}\PY{p}{:}
+            \PY{n}{epoch\PYZus{}loss} \PY{o}{=} \PY{l+m+mi}{0}
+            \PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} SGD: 遍歷每個樣本 \PYZhy{}\PYZhy{}\PYZhy{}}
+            \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}samples}\PY{p}{)}\PY{p}{:}
+                \PY{c+c1}{\PYZsh{} 獲取單個樣本，並確保其形狀正確 (1, n\PYZus{}features)}
+                \PY{n}{x\PYZus{}sample} \PY{o}{=} \PY{n}{X\PYZus{}train}\PY{p}{[}\PY{n}{i} \PY{p}{:} \PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+                \PY{n}{y\PYZus{}sample} \PY{o}{=} \PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{i} \PY{p}{:} \PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+
+                \PY{c+c1}{\PYZsh{} 1. 前向傳播}
+                \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{y\PYZus{}pred} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{forward}\PY{p}{(}\PY{n}{x\PYZus{}sample}\PY{p}{)}
+
+                \PY{c+c1}{\PYZsh{} 2. 計算損失 (僅用於記錄，梯度計算在 backward 中)}
+                \PY{n}{loss} \PY{o}{=} \PY{n}{square\PYZus{}error\PYZus{}loss}\PY{p}{(}\PY{n}{y\PYZus{}sample}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{)}
+                \PY{n}{epoch\PYZus{}loss} \PY{o}{+}\PY{o}{=} \PY{n}{loss}
+
+                \PY{c+c1}{\PYZsh{} 3. 反向傳播}
+                \PY{n}{dW1}\PY{p}{,} \PY{n}{db1}\PY{p}{,} \PY{n}{dW2}\PY{p}{,} \PY{n}{db2} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{backward}\PY{p}{(}\PY{n}{x\PYZus{}sample}\PY{p}{,} \PY{n}{y\PYZus{}sample}\PY{p}{,} \PY{n}{y\PYZus{}pred}\PY{p}{)}  \PY{c+c1}{\PYZsh{} noqa: N806}
+
+                \PY{c+c1}{\PYZsh{} 4. 更新權重 (SGD)}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{update\PYZus{}weights}\PY{p}{(}\PY{n}{dW1}\PY{p}{,} \PY{n}{db1}\PY{p}{,} \PY{n}{dW2}\PY{p}{,} \PY{n}{db2}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{p}{)}
+            \PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} SGD 結束 \PYZhy{}\PYZhy{}\PYZhy{}}
+
+            \PY{c+c1}{\PYZsh{} 計算並記錄該 epoch 的平均損失}
+            \PY{n}{average\PYZus{}epoch\PYZus{}loss} \PY{o}{=} \PY{n}{epoch\PYZus{}loss} \PY{o}{/} \PY{n}{n\PYZus{}samples}
+            \PY{n}{losses}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{average\PYZus{}epoch\PYZus{}loss}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} print 進度}
+            \PY{k}{if} \PY{p}{(}\PY{n}{epoch} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{n}{verbose} \PY{o}{==} \PY{l+m+mi}{0} \PY{o+ow}{or} \PY{n}{epoch} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Epoch }\PY{l+s+si}{\PYZob{}}\PY{n}{epoch}\PY{+w}{ }\PY{o}{+}\PY{+w}{ }\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{/}\PY{l+s+si}{\PYZob{}}\PY{n}{epochs}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{, 平均損失: }\PY{l+s+si}{\PYZob{}}\PY{n}{average\PYZus{}epoch\PYZus{}loss}\PY{l+s+si}{:}\PY{l+s+s2}{.6f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+        \PY{n}{end\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{訓練完成。總耗時: }\PY{l+s+si}{\PYZob{}}\PY{n}{end\PYZus{}time}\PY{+w}{ }\PY{o}{\PYZhy{}}\PY{+w}{ }\PY{n}{start\PYZus{}time}\PY{l+s+si}{:}\PY{l+s+s2}{.2f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ 秒}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{return} \PY{n}{losses}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{predict}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{x}\PY{p}{)}\PY{p}{:}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{        使用訓練好的模型進行預測。}
+
+\PY{l+s+sd}{        Args:}
+\PY{l+s+sd}{            x (np.ndarray): 輸入資料。}
+
+\PY{l+s+sd}{        Returns:}
+\PY{l+s+sd}{            np.ndarray: 二元預測結果 (0 或 1)。}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{final\PYZus{}output} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{forward}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} 將 Sigmoid 輸出轉換為二元預測 (閾值為 0.5)}
+        \PY{n}{predictions} \PY{o}{=} \PY{p}{(}\PY{n}{final\PYZus{}output} \PY{o}{\PYZgt{}} \PY{l+m+mf}{0.5}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
+        \PY{k}{return} \PY{n}{predictions}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{evaluate}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{:}  \PY{c+c1}{\PYZsh{} noqa: N803}
+\PY{+w}{        }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{        在測試集上評估模型性能。}
+
+\PY{l+s+sd}{        Args:}
+\PY{l+s+sd}{            X\PYZus{}test (np.ndarray): 測試特徵。}
+\PY{l+s+sd}{            y\PYZus{}test (np.ndarray): 測試標籤。}
+
+\PY{l+s+sd}{        Returns:}
+\PY{l+s+sd}{            tuple: (accuracy, confusion\PYZus{}matrix)}
+\PY{l+s+sd}{                準確率和混淆矩陣。}
+\PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{n}{predictions} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+        \PY{n}{accuracy} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{n}{y\PYZus{}test}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 計算 confusion matrix}
+        \PY{n}{tp} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{y\PYZus{}test} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+        \PY{n}{tn} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{y\PYZus{}test} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+        \PY{n}{fp} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{y\PYZus{}test} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+        \PY{n}{fn} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{y\PYZus{}test} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+
+        \PY{n}{confusion\PYZus{}matrix} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{n}{tn}\PY{p}{,} \PY{n}{fp}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{n}{fn}\PY{p}{,} \PY{n}{tp}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{模型評估結果:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} 測試集準確率: }\PY{l+s+si}{\PYZob{}}\PY{n}{accuracy}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{} 混淆矩陣:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+si}{\PYZob{}}\PY{n}{confusion\PYZus{}matrix}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{    \PYZhy{} True Negatives (TN): }\PY{l+s+si}{\PYZob{}}\PY{n}{tn}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{    \PYZhy{} False Positives (FP): }\PY{l+s+si}{\PYZob{}}\PY{n}{fp}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{    \PYZhy{} False Negatives (FN): }\PY{l+s+si}{\PYZob{}}\PY{n}{fn}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{    \PYZhy{} True Positives (TP): }\PY{l+s+si}{\PYZob{}}\PY{n}{tp}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+        \PY{k}{return} \PY{n}{accuracy}\PY{p}{,} \PY{n}{confusion\PYZus{}matrix}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Step 3: Evaluation}\label{step-3-evaluation}
+
+註：Training 的實作已與 Step 2 一起寫在 Class
+中，這邊只進行呼叫訓練的操作
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{SimpleANN}\PY{p}{(}\PY{n}{input\PYZus{}size}\PY{o}{=}\PY{n}{INPUT\PYZus{}SIZE}\PY{p}{,}
+            \PY{n}{hidden\PYZus{}size}\PY{o}{=}\PY{n}{HIDDEN\PYZus{}SIZE}\PY{p}{,}
+            \PY{n}{output\PYZus{}size}\PY{o}{=}\PY{n}{OUTPUT\PYZus{}SIZE}\PY{p}{,}
+            \PY{n}{hidden\PYZus{}activation}\PY{o}{=}\PY{n}{HIDDEN\PYZus{}ACTIVATION}\PY{p}{,}
+            \PY{n}{seed}\PY{o}{=}\PY{n}{RANDOM\PYZus{}SEED}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+神經網路初始化完成:
+  - 輸入層大小: 8
+  - 隱藏層大小: 16
+  - 輸出層大小: 1
+  - 隱藏層激活函數: ActivationFunction.RELU
+  - 輸出層激活函數: sigmoid
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 訓練模型}
+\PY{n}{losses} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{epochs}\PY{o}{=}\PY{n}{EPOCHS}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{o}{=}\PY{n}{LEARNING\PYZus{}RATE}\PY{p}{,} \PY{n}{verbose}\PY{o}{=}\PY{n}{VERBOSE\PYZus{}STEP}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+開始訓練{\ldots}
+  - Epochs: 1500
+  - Learning Rate: 0.01
+  - 訓練樣本數: 614
+Epoch 1/1500, 平均損失: 0.120933
+Epoch 100/1500, 平均損失: 0.074983
+Epoch 200/1500, 平均損失: 0.073965
+Epoch 300/1500, 平均損失: 0.072848
+Epoch 400/1500, 平均損失: 0.071801
+Epoch 500/1500, 平均損失: 0.070995
+Epoch 600/1500, 平均損失: 0.070316
+Epoch 700/1500, 平均損失: 0.069818
+Epoch 800/1500, 平均損失: 0.069477
+Epoch 900/1500, 平均損失: 0.069250
+Epoch 1000/1500, 平均損失: 0.069071
+Epoch 1100/1500, 平均損失: 0.068835
+Epoch 1200/1500, 平均損失: 0.068674
+Epoch 1300/1500, 平均損失: 0.068566
+Epoch 1400/1500, 平均損失: 0.068467
+Epoch 1500/1500, 平均損失: 0.068418
+訓練完成。總耗時: 55.31 秒
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 繪製 loss vs. epoch}
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{matplotlib}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{pyplot} \PY{k}{as} \PY{n}{plt}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{EPOCHS} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} \PY{n}{losses}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Epoch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Average Square Error Loss}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Loss Curve}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_40_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \section{Step 4: Evaluation}\label{step-4-evaluation}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{accuracy}\PY{p}{,} \PY{n}{confusion\PYZus{}mat} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{evaluate}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+模型評估結果:
+  - 測試集準確率: 0.7792
+  - 混淆矩陣:
+[[83 13]
+ [21 37]]
+    - True Negatives (TN): 83
+    - False Positives (FP): 13
+    - False Negatives (FN): 21
+    - True Positives (TP): 37
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{最終 Weights:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W1 (Input \PYZhy{}\PYZgt{} Hidden):}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{model}\PY{o}{.}\PY{n}{W1}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b1 (Hidden Bias):}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{model}\PY{o}{.}\PY{n}{b1}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W2 (Hidden \PYZhy{}\PYZgt{} Output):}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{model}\PY{o}{.}\PY{n}{W2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b2 (Output Bias):}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{model}\PY{o}{.}\PY{n}{b2}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+最終 Weights:
+W1 (Input -> Hidden):
+ [[-0.25741404  0.60069728  0.21440997 -0.42379298  0.086695   -0.34400548
+  -1.74363813  0.17807147  0.09287509  0.59019976 -0.47941551  0.90389712
+   0.84638356 -0.28766089 -1.03633838 -0.31627978]
+ [-0.19654201 -0.00931814 -0.72662162 -0.8675841   0.12609567 -0.36050614
+   0.66263342 -0.39880344 -0.05107465  0.4876268  -0.30032622  0.4195509
+   0.45504173 -0.45354959  0.91121065 -0.33806347]
+ [-0.77157299  0.46021188  0.22083237  0.81944459 -0.27301264 -0.40232789
+   0.01511544  0.14796978 -0.39820967  0.00505847 -0.46561148  0.3161549
+  -0.14036066  0.16252228 -0.24637666  0.02033175]
+ [-0.42263687 -0.37219503  1.4651971   0.35595754  0.52014502  0.39482735
+   0.24193511  0.40418033 -0.41158444  0.23756619 -0.45477271  0.38187806
+   0.51132434 -0.22865097  0.31337502 -0.1417006 ]
+ [-2.20543495 -0.21231267 -1.04403609  0.13609958 -0.5709749   0.48688694
+   0.25049193 -0.23659268 -0.49484632 -0.57550863  0.20685734 -0.78133004
+  -0.74563749 -0.42595535 -0.61583613 -0.38313694]
+ [ 0.44622995 -0.02322995 -0.99596078 -0.13591232 -0.24688819 -0.17481668
+   0.29061237 -0.11032765  0.36085847  0.47159579 -0.38040575  0.70642686
+   0.81028029  0.0612772   0.31528508  0.00660041]
+ [-0.46068974 -0.05145953 -1.7713426  -1.10807808 -0.51437547  0.13641041
+  -0.82000613 -0.15779313  0.44977067 -0.25110125 -0.08961708  0.25187121
+  -0.22991178 -0.42302009 -0.22406465 -0.34503545]
+ [ 2.81072374  0.38853501  0.06057336 -1.4000801   0.48828698 -0.31342994
+   1.05625322 -0.21815191  0.27407022  0.91098411 -0.18199653  0.2845261
+   0.41966169 -0.07289221  0.58219181  0.35547229]]
+b1 (Hidden Bias):
+ [[-0.00242864 -0.06474897  0.74279499  1.16425757 -0.13492469  0.
+  -0.06172456  0.36641835  0.01062365 -0.06341467  0.         -0.24824213
+  -0.02894696  0.         -0.0183945   0.00653713]]
+W2 (Hidden -> Output):
+ [[-3.34886373]
+ [ 0.52054996]
+ [-2.33908623]
+ [-1.76858693]
+ [-0.74581054]
+ [-0.19294193]
+ [ 1.93645543]
+ [-0.32322734]
+ [-0.11351547]
+ [ 0.8865093 ]
+ [-0.16203218]
+ [ 1.00650066]
+ [ 1.12127219]
+ [-0.29492658]
+ [ 1.3135932 ]
+ [-0.24667669]]
+b2 (Output Bias):
+ [[-1.14900166]]
+    \end{Verbatim}
+
+    \section{Conclusion}\label{conclusion}
+
+本筆記本成功地使用 NumPy 從零開始建立並訓練了一個簡單的 ANN 模型，用於
+Pima Indians Diabetes 資料集的二元分類任務。
+
+訓練過程中的損失曲線顯示，模型的平方誤差損失隨著訓練輪數的增加而穩定下降，最終趨於平穩
+。
+
+在測試集上的評估結果如下： * \textbf{準確率 (Accuracy)}: 0.7792
+(77.92\%) * \textbf{Confusion Matrix}: * True Negatives (TN): 83 * False
+Positives (FP): 13 * False Negatives (FN): 21 * True Positives (TP): 37
+
+這些結果表明，這個從頭實作的簡單 ANN
+模型在糖尿病預測任務上達到了一定的效能。最終訓練完成的模型權重也已記錄下來。
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
