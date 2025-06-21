@@ -1,0 +1,2718 @@
+\documentclass[11pt]{article}
+    \usepackage{fontspec}
+    \usepackage[slantfont, boldfont]{xeCJK}
+    \setCJKmainfont{標楷體}
+    \setmainfont{Times New Roman}
+    \setmonofont{CaskaydiaCove Nerd Font Mono}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \makeatletter
+    \newsavebox\pandoc@box
+    \newcommand*\pandocbounded[1]{%
+      \sbox\pandoc@box{#1}%
+      % scaling factors for width and height
+      \Gscale@div\@tempa\textheight{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+      \Gscale@div\@tempb\linewidth{\wd\pandoc@box}%
+      % select the smaller of both
+      \ifdim\@tempb\p@<\@tempa\p@
+        \let\@tempa\@tempb
+      \fi
+      % scaling accordingly (\@tempa < 1)
+      \ifdim\@tempa\p@<\p@
+        \scalebox{\@tempa}{\usebox\pandoc@box}%
+      % scaling not needed, use as it is
+      \else
+        \usebox{\pandoc@box}%
+      \fi
+    }
+    \makeatother
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{人工智慧概論 HW4}
+    \author{4112064214 侯竣奇}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \section{Summary}\label{summary}
+
+    本次 HW4 作業的要求是在不使用 PyTorch 及 TensorFlow
+等深度學習框架的前提下，使用 Numpy 來訓練一個卷積神經網路 (Convolutional
+Neural Network, CNN) 來分類 MNIST 資料集。可以另外訓練 CIFAR-10 或
+ImageNet 資料集作為加分。
+
+我在訓練過程中遇到過巢狀迴圈執行過於緩慢的問題，改用 img2col
+的方式來加速，也使用 Cupy 來進行 GPU 加速。
+
+訓練 MNIST 可以達到 98.60\%
+的準確率，同時我也完成了各項性能計算（精確率、召回率）、繪制學習曲線、卷積核視覺化（加分項）等任務。
+
+作為加分挑戰，我也將模型應用於更複雜的 CIFAR-10
+彩色圖片資料集，在這個資料集上取得了 59.01\%
+的準確率，並同樣完成了相關的性能評估與視覺化。
+
+其餘詳細的性能分析與解說在檔案最後 Conclusion 的部分有提及。
+
+    \section{Step 0:
+下載資料集}\label{step-0-ux4e0bux8f09ux8cc7ux6599ux96c6}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 延用 HW3 中下載 mnist 的程式}
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{get\PYZus{}mnist}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    The code to download the mnist data original came from}
+\PY{l+s+sd}{    https://cntk.ai/pythondocs/CNTK\PYZus{}103A\PYZus{}MNIST\PYZus{}DataLoader.html}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+
+    \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{gzip}
+    \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{numpy}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{np}
+    \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{os}
+    \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{struct}
+
+    \PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{urllib}\PY{n+nn}{.}\PY{n+nn}{request}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{urlretrieve}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{load\PYZus{}data}\PY{p}{(}\PY{n}{src}\PY{p}{,} \PY{n}{num\PYZus{}samples}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Downloading }\PY{l+s+s2}{\PYZdq{}} \PY{o}{+} \PY{n}{src}\PY{p}{)}
+        \PY{n}{gzfname}\PY{p}{,} \PY{n}{h} \PY{o}{=} \PY{n}{urlretrieve}\PY{p}{(}\PY{n}{src}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./delete.me}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Done.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{try}\PY{p}{:}
+            \PY{k}{with} \PY{n}{gzip}\PY{o}{.}\PY{n}{open}\PY{p}{(}\PY{n}{gzfname}\PY{p}{)} \PY{k}{as} \PY{n}{gz}\PY{p}{:}
+                \PY{n}{n} \PY{o}{=} \PY{n}{struct}\PY{o}{.}\PY{n}{unpack}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{I}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{gz}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+                \PY{c+c1}{\PYZsh{} Read magic number.}
+                \PY{k}{if} \PY{n}{n}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{!=} \PY{l+m+mh}{0x3080000}\PY{p}{:}
+                    \PY{k}{raise} \PY{n+ne}{Exception}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Invalid file: unexpected magic number.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{c+c1}{\PYZsh{} Read number of entries.}
+                \PY{n}{n} \PY{o}{=} \PY{n}{struct}\PY{o}{.}\PY{n}{unpack}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}I}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{gz}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+                \PY{k}{if} \PY{n}{n} \PY{o}{!=} \PY{n}{num\PYZus{}samples}\PY{p}{:}
+                    \PY{k}{raise} \PY{n+ne}{Exception}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Invalid file: expected }\PY{l+s+si}{\PYZob{}}\PY{n}{num\PYZus{}samples}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ entries.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{n}{crow} \PY{o}{=} \PY{n}{struct}\PY{o}{.}\PY{n}{unpack}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}I}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{gz}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+                \PY{n}{ccol} \PY{o}{=} \PY{n}{struct}\PY{o}{.}\PY{n}{unpack}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}I}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{gz}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+                \PY{k}{if} \PY{n}{crow} \PY{o}{!=} \PY{l+m+mi}{28} \PY{o+ow}{or} \PY{n}{ccol} \PY{o}{!=} \PY{l+m+mi}{28}\PY{p}{:}
+                    \PY{k}{raise} \PY{n+ne}{Exception}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Invalid file: expected 28 rows/cols per image.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{c+c1}{\PYZsh{} Read data.}
+                \PY{n}{res} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{frombuffer}\PY{p}{(}\PY{n}{gz}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{n}{num\PYZus{}samples} \PY{o}{*} \PY{n}{crow} \PY{o}{*} \PY{n}{ccol}\PY{p}{)}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{uint8}\PY{p}{)}
+        \PY{k}{finally}\PY{p}{:}
+            \PY{n}{os}\PY{o}{.}\PY{n}{remove}\PY{p}{(}\PY{n}{gzfname}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} 這次我們不在這裡做 normalize，留到 CuPy 陣列處理}
+        \PY{k}{return} \PY{n}{res}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{p}{(}\PY{n}{num\PYZus{}samples}\PY{p}{,} \PY{n}{crow}\PY{p}{,} \PY{n}{ccol}\PY{p}{)}\PY{p}{)}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{load\PYZus{}labels}\PY{p}{(}\PY{n}{src}\PY{p}{,} \PY{n}{num\PYZus{}samples}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Downloading }\PY{l+s+s2}{\PYZdq{}} \PY{o}{+} \PY{n}{src}\PY{p}{)}
+        \PY{n}{gzfname}\PY{p}{,} \PY{n}{h} \PY{o}{=} \PY{n}{urlretrieve}\PY{p}{(}\PY{n}{src}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./delete.me}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Done.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{try}\PY{p}{:}
+            \PY{k}{with} \PY{n}{gzip}\PY{o}{.}\PY{n}{open}\PY{p}{(}\PY{n}{gzfname}\PY{p}{)} \PY{k}{as} \PY{n}{gz}\PY{p}{:}
+                \PY{n}{n} \PY{o}{=} \PY{n}{struct}\PY{o}{.}\PY{n}{unpack}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{I}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{gz}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+                \PY{c+c1}{\PYZsh{} Read magic number.}
+                \PY{k}{if} \PY{n}{n}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{!=} \PY{l+m+mh}{0x1080000}\PY{p}{:}
+                    \PY{k}{raise} \PY{n+ne}{Exception}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Invalid file: unexpected magic number.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{c+c1}{\PYZsh{} Read number of entries.}
+                \PY{n}{n} \PY{o}{=} \PY{n}{struct}\PY{o}{.}\PY{n}{unpack}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}I}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{gz}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+                \PY{k}{if} \PY{n}{n}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{!=} \PY{n}{num\PYZus{}samples}\PY{p}{:}
+                    \PY{k}{raise} \PY{n+ne}{Exception}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Invalid file: expected }\PY{l+s+si}{\PYZob{}}\PY{n}{num\PYZus{}samples}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ rows.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{c+c1}{\PYZsh{} Read labels.}
+                \PY{n}{res} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{frombuffer}\PY{p}{(}\PY{n}{gz}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{n}{num\PYZus{}samples}\PY{p}{)}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{uint8}\PY{p}{)}
+        \PY{k}{finally}\PY{p}{:}
+            \PY{n}{os}\PY{o}{.}\PY{n}{remove}\PY{p}{(}\PY{n}{gzfname}\PY{p}{)}
+        \PY{k}{return} \PY{n}{res}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{num\PYZus{}samples}\PY{p}{)}
+
+    \PY{k}{def}\PY{+w}{ }\PY{n+nf}{try\PYZus{}download}\PY{p}{(}\PY{n}{data\PYZus{}source}\PY{p}{,} \PY{n}{label\PYZus{}source}\PY{p}{,} \PY{n}{num\PYZus{}samples}\PY{p}{)}\PY{p}{:}
+        \PY{n}{data} \PY{o}{=} \PY{n}{load\PYZus{}data}\PY{p}{(}\PY{n}{data\PYZus{}source}\PY{p}{,} \PY{n}{num\PYZus{}samples}\PY{p}{)}
+        \PY{n}{labels} \PY{o}{=} \PY{n}{load\PYZus{}labels}\PY{p}{(}\PY{n}{label\PYZus{}source}\PY{p}{,} \PY{n}{num\PYZus{}samples}\PY{p}{)}
+        \PY{k}{return} \PY{n}{data}\PY{p}{,} \PY{n}{labels}
+
+    \PY{n}{server} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{https://raw.githubusercontent.com/fgnt/mnist/master}\PY{l+s+s2}{\PYZdq{}}
+
+    \PY{c+c1}{\PYZsh{} URLs for the train image and label data}
+    \PY{n}{url\PYZus{}train\PYZus{}image} \PY{o}{=} \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{server}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{/train\PYZhy{}images\PYZhy{}idx3\PYZhy{}ubyte.gz}\PY{l+s+s2}{\PYZdq{}}
+    \PY{n}{url\PYZus{}train\PYZus{}labels} \PY{o}{=} \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{server}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{/train\PYZhy{}labels\PYZhy{}idx1\PYZhy{}ubyte.gz}\PY{l+s+s2}{\PYZdq{}}
+    \PY{n}{num\PYZus{}train\PYZus{}samples} \PY{o}{=} \PY{l+m+mi}{60000}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Downloading train data}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{train\PYZus{}features}\PY{p}{,} \PY{n}{train\PYZus{}labels} \PY{o}{=} \PY{n}{try\PYZus{}download}\PY{p}{(}\PY{n}{url\PYZus{}train\PYZus{}image}\PY{p}{,} \PY{n}{url\PYZus{}train\PYZus{}labels}\PY{p}{,} \PY{n}{num\PYZus{}train\PYZus{}samples}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} URLs for the test image and label data}
+    \PY{n}{url\PYZus{}test\PYZus{}image} \PY{o}{=} \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{server}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{/t10k\PYZhy{}images\PYZhy{}idx3\PYZhy{}ubyte.gz}\PY{l+s+s2}{\PYZdq{}}
+    \PY{n}{url\PYZus{}test\PYZus{}labels} \PY{o}{=} \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{server}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{/t10k\PYZhy{}labels\PYZhy{}idx1\PYZhy{}ubyte.gz}\PY{l+s+s2}{\PYZdq{}}
+    \PY{n}{num\PYZus{}test\PYZus{}samples} \PY{o}{=} \PY{l+m+mi}{10000}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Downloading test data}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{test\PYZus{}features}\PY{p}{,} \PY{n}{test\PYZus{}labels} \PY{o}{=} \PY{n}{try\PYZus{}download}\PY{p}{(}\PY{n}{url\PYZus{}test\PYZus{}image}\PY{p}{,} \PY{n}{url\PYZus{}test\PYZus{}labels}\PY{p}{,} \PY{n}{num\PYZus{}test\PYZus{}samples}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{train\PYZus{}features}\PY{p}{,} \PY{n}{train\PYZus{}labels}\PY{p}{,} \PY{n}{test\PYZus{}features}\PY{p}{,} \PY{n}{test\PYZus{}labels}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train\PYZus{}features\PYZus{}np}\PY{p}{,} \PY{n}{train\PYZus{}labels\PYZus{}np}\PY{p}{,} \PY{n}{test\PYZus{}features\PYZus{}np}\PY{p}{,} \PY{n}{test\PYZus{}labels\PYZus{}np} \PY{o}{=} \PY{n}{get\PYZus{}mnist}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Downloading train data
+Downloading https://raw.githubusercontent.com/fgnt/mnist/master/train-images-
+idx3-ubyte.gz
+Done.
+Downloading https://raw.githubusercontent.com/fgnt/mnist/master/train-labels-
+idx1-ubyte.gz
+Done.
+Downloading test data
+Downloading https://raw.githubusercontent.com/fgnt/mnist/master/t10k-images-
+idx3-ubyte.gz
+Done.
+Downloading https://raw.githubusercontent.com/fgnt/mnist/master/t10k-labels-
+idx1-ubyte.gz
+Done.
+    \end{Verbatim}
+
+    \section{Step 1: 資料前處理 (Data
+Preprocessing)}\label{step-1-ux8cc7ux6599ux524dux8655ux7406-data-preprocessing}
+
+資料下載完成後，接下來我們要進行一系列的處理，才能將其輸入到 CNN
+模型中。
+
+    \subsection{Step 1-1: 讀取資料並轉換為 CuPy
+陣列}\label{step-1-1-ux8b80ux53d6ux8cc7ux6599ux4e26ux8f49ux63dbux70ba-cupy-ux9663ux5217}
+
+在 HW4 中我們改用 CuPy 來加速原先 Numpy 的運算速度
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{cupy}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{cp}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{numpy}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{np}
+
+\PY{c+c1}{\PYZsh{} 使用 cp.asarray() 將資料從 CPU memory 移至 GPU memory}
+\PY{n}{train\PYZus{}x\PYZus{}orig} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{train\PYZus{}features\PYZus{}np}\PY{p}{)}
+\PY{n}{train\PYZus{}y\PYZus{}orig} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{train\PYZus{}labels\PYZus{}np}\PY{p}{)}
+\PY{n}{test\PYZus{}x\PYZus{}orig} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{test\PYZus{}features\PYZus{}np}\PY{p}{)}
+\PY{n}{test\PYZus{}y\PYZus{}orig} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{test\PYZus{}labels\PYZus{}np}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} 資料塑形與正規化 (Reshape \PYZam{} Normalize) \PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{} CNN 需要的輸入格式為 (樣本數, 色彩頻道, 高度, 寬度)}
+\PY{c+c1}{\PYZsh{} MNIST 是灰階圖片，所以 Channel 為 1}
+\PY{c+c1}{\PYZsh{} 我們也在此將像素值從 0\PYZhy{}255 正規化到 0\PYZhy{}1 之間}
+\PY{n}{train\PYZus{}x} \PY{o}{=} \PY{n}{train\PYZus{}x\PYZus{}orig}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{train\PYZus{}x\PYZus{}orig}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{)} \PY{o}{/} \PY{l+m+mf}{255.0}
+\PY{n}{test\PYZus{}x} \PY{o}{=} \PY{n}{test\PYZus{}x\PYZus{}orig}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{test\PYZus{}x\PYZus{}orig}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{)} \PY{o}{/} \PY{l+m+mf}{255.0}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 驗證一下 shape 和 type}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}\PYZhy{} Shapes of CuPy arrays \PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{train\PYZus{}x.shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{train\PYZus{}x}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{train\PYZus{}y\PYZus{}orig.shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{train\PYZus{}y\PYZus{}orig}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}x.shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{test\PYZus{}x}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}y\PYZus{}orig.shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{test\PYZus{}y\PYZus{}orig}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZhy{}\PYZhy{}\PYZhy{} Data types \PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{type of train\PYZus{}x:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n+nb}{type}\PY{p}{(}\PY{n}{train\PYZus{}x}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{type of train\PYZus{}y\PYZus{}orig:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n+nb}{type}\PY{p}{(}\PY{n}{train\PYZus{}y\PYZus{}orig}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+--- Shapes of CuPy arrays ---
+train\_x.shape: (60000, 1, 28, 28)
+train\_y\_orig.shape: (60000,)
+test\_x.shape: (10000, 1, 28, 28)
+test\_y\_orig.shape: (10000,)
+
+--- Data types ---
+type of train\_x: <class 'cupy.ndarray'>
+type of train\_y\_orig: <class 'cupy.ndarray'>
+    \end{Verbatim}
+
+    \subsection{Step 1-2: 對 Label 進行 One-Hot
+Encode}\label{step-1-2-ux5c0d-label-ux9032ux884c-one-hot-encode}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{one\PYZus{}hot\PYZus{}encode}\PY{p}{(}\PY{n}{labels}\PY{p}{,} \PY{n}{num\PYZus{}classes}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} 創建一個全為 0 的矩陣，shape 為 (樣本數, 類別數)}
+    \PY{n}{one\PYZus{}hot} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{labels}\PY{o}{.}\PY{n}{size}\PY{p}{,} \PY{n}{num\PYZus{}classes}\PY{p}{)}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} 在對應的類別位置上填上 1}
+    \PY{n}{one\PYZus{}hot}\PY{p}{[}\PY{n}{cp}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{labels}\PY{o}{.}\PY{n}{size}\PY{p}{)}\PY{p}{,} \PY{n}{labels}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+    \PY{k}{return} \PY{n}{one\PYZus{}hot}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 我們的類別是數字 0\PYZhy{}9，所以有 10 個類別}
+\PY{n}{num\PYZus{}classes} \PY{o}{=} \PY{l+m+mi}{10}
+\PY{n}{train\PYZus{}y} \PY{o}{=} \PY{n}{one\PYZus{}hot\PYZus{}encode}\PY{p}{(}\PY{n}{train\PYZus{}y\PYZus{}orig}\PY{p}{,} \PY{n}{num\PYZus{}classes}\PY{p}{)}
+\PY{n}{test\PYZus{}y} \PY{o}{=} \PY{n}{one\PYZus{}hot\PYZus{}encode}\PY{p}{(}\PY{n}{test\PYZus{}y\PYZus{}orig}\PY{p}{,} \PY{n}{num\PYZus{}classes}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{One\PYZhy{}Hot encode 前的 train\PYZus{}y.shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{train\PYZus{}y\PYZus{}orig}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{One\PYZhy{}Hot 後的 train\PYZus{}y.shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{train\PYZus{}y}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{一個 One\PYZhy{}Hot 編碼範例 (原始 label 是 }\PY{l+s+si}{\PYZob{}}\PY{n}{train\PYZus{}y\PYZus{}orig}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{): }\PY{l+s+si}{\PYZob{}}\PY{n}{train\PYZus{}y}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+One-Hot encode 前的 train\_y.shape: (60000,)
+One-Hot 後的 train\_y.shape: (60000, 10)
+一個 One-Hot 編碼範例 (原始 label 是 5): [0. 0. 0. 0. 0. 1. 0. 0. 0. 0.]
+    \end{Verbatim}
+
+    \section{Step 2: 實作 CNN}\label{step-2-ux5be6ux4f5c-cnn}
+
+    \subsection{Step 2-2:
+初始化權重}\label{step-2-2-ux521dux59cbux5316ux6b0aux91cd}
+
+初始化 CNN 的權重與偏置
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{input\_dim} -- 輸入圖片的維度 (C, H, W)
+\item
+  \texttt{n\_filters}, \texttt{filter\_size}, \texttt{conv\_stride},
+  \texttt{conv\_padding} -- 卷積層的 hyperparameter
+\item
+  \texttt{pool\_size}, \texttt{pool\_stride} -- 池化層的超參數
+\item
+  \texttt{n\_h}, \texttt{n\_y} -- 全連接層與輸出層的神經元數量
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{parameters} -- 一個包含所有權重與 bias 的 Python dict
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{initialize\PYZus{}parameters}\PY{p}{(}\PY{n}{input\PYZus{}dim}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{)}\PY{p}{,}
+                \PY{n}{n\PYZus{}filters}\PY{o}{=}\PY{l+m+mi}{8}\PY{p}{,} \PY{n}{filter\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{conv\PYZus{}stride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{conv\PYZus{}padding}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}
+                \PY{n}{pool\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{pool\PYZus{}stride}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,}
+                \PY{n}{n\PYZus{}h}\PY{o}{=}\PY{l+m+mi}{128}\PY{p}{,} \PY{n}{n\PYZus{}y}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:}
+
+    \PY{n}{cp}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{l+m+mi}{42}\PY{p}{)}
+
+    \PY{n}{C\PYZus{}in}\PY{p}{,} \PY{n}{H\PYZus{}in}\PY{p}{,} \PY{n}{W\PYZus{}in} \PY{o}{=} \PY{n}{input\PYZus{}dim}
+
+    \PY{c+c1}{\PYZsh{} 1. 初始化卷積層權重}
+    \PY{n}{W\PYZus{}conv} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{C\PYZus{}in}\PY{p}{,} \PY{n}{filter\PYZus{}size}\PY{p}{,} \PY{n}{filter\PYZus{}size}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{0.01}
+    \PY{n}{b\PYZus{}conv} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 2. 動態計算全連接層的輸入維度}
+    \PY{c+c1}{\PYZsh{} 計算卷積層的輸出維度}
+    \PY{n}{H\PYZus{}conv} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{H\PYZus{}in} \PY{o}{\PYZhy{}} \PY{n}{filter\PYZus{}size} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{conv\PYZus{}padding}\PY{p}{)} \PY{o}{/} \PY{n}{conv\PYZus{}stride}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+    \PY{n}{W\PYZus{}conv\PYZus{}out} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{W\PYZus{}in} \PY{o}{\PYZhy{}} \PY{n}{filter\PYZus{}size} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{conv\PYZus{}padding}\PY{p}{)} \PY{o}{/} \PY{n}{conv\PYZus{}stride}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+
+    \PY{c+c1}{\PYZsh{} 計算池化層的輸出維度（池化層不補零）}
+    \PY{n}{H\PYZus{}pool} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{H\PYZus{}conv} \PY{o}{\PYZhy{}} \PY{n}{pool\PYZus{}size}\PY{p}{)} \PY{o}{/} \PY{n}{pool\PYZus{}stride}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+    \PY{n}{W\PYZus{}pool\PYZus{}out} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{W\PYZus{}conv\PYZus{}out} \PY{o}{\PYZhy{}} \PY{n}{pool\PYZus{}size}\PY{p}{)} \PY{o}{/} \PY{n}{pool\PYZus{}stride}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+
+    \PY{c+c1}{\PYZsh{} 扁平化後的維度}
+    \PY{n}{fc\PYZus{}input\PYZus{}dim} \PY{o}{=} \PY{n}{n\PYZus{}filters} \PY{o}{*} \PY{n}{H\PYZus{}pool} \PY{o}{*} \PY{n}{W\PYZus{}pool\PYZus{}out}
+
+    \PY{c+c1}{\PYZsh{} print(f\PYZdq{}根據設定計算，全連接層的輸入維度為: \PYZob{}fc\PYZus{}input\PYZus{}dim\PYZcb{}\PYZdq{})}
+
+    \PY{c+c1}{\PYZsh{} 3. 初始化全連接層與輸出層權重}
+    \PY{n}{W\PYZus{}fc} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{fc\PYZus{}input\PYZus{}dim}\PY{p}{,} \PY{n}{n\PYZus{}h}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{0.01}
+    \PY{n}{b\PYZus{}fc} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{ones}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{n\PYZus{}h}\PY{p}{)}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{0.01}
+    \PY{n}{W\PYZus{}out} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{n\PYZus{}h}\PY{p}{,} \PY{n}{n\PYZus{}y}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{0.01}
+    \PY{n}{b\PYZus{}out} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{n\PYZus{}y}\PY{p}{)}\PY{p}{)}
+
+    \PY{n}{parameters} \PY{o}{=} \PY{p}{\PYZob{}}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}conv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{W\PYZus{}conv}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b\PYZus{}conv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{b\PYZus{}conv}\PY{p}{,}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}fc}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{W\PYZus{}fc}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b\PYZus{}fc}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{b\PYZus{}fc}\PY{p}{,}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}out}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{W\PYZus{}out}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b\PYZus{}out}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{b\PYZus{}out}
+    \PY{p}{\PYZcb{}}
+
+    \PY{k}{return} \PY{n}{parameters}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} MNIST}
+\PY{c+c1}{\PYZsh{} 輸入維度: (1, 28, 28), 卷積設定: 3x3 filter, stride 1, padding 1 \PYZhy{}\PYZgt{} 輸出 (28, 28)}
+\PY{c+c1}{\PYZsh{} 池化設定: 2x2, stride 2 \PYZhy{}\PYZgt{} 輸出 (14, 14)}
+
+\PY{n}{params} \PY{o}{=} \PY{n}{initialize\PYZus{}parameters}\PY{p}{(}\PY{n}{input\PYZus{}dim}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{)}\PY{p}{,} \PY{n}{n\PYZus{}filters}\PY{o}{=}\PY{l+m+mi}{8}\PY{p}{,} \PY{n}{filter\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZhy{}\PYZhy{}\PYZhy{} Parameter Shapes \PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}conv Shape: }\PY{l+s+s2}{\PYZdq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{params}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}conv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{shape}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}fc Shape: }\PY{l+s+s2}{\PYZdq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{params}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}fc}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{shape}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+--- Parameter Shapes ---
+W\_conv Shape: (8, 1, 3, 3)
+W\_fc Shape: (1568, 128)
+    \end{Verbatim}
+
+    \subsection{Step 2-2: 實作卷積層 Forward
+Propagation}\label{step-2-2-ux5be6ux4f5cux5377ux7a4dux5c64-forward-propagation}
+
+\textbf{zero\_pad}: 對 CuPy 陣列進行補零
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{X} -- CuPy 陣列, shape (N, C, H, W)
+\item
+  \texttt{pad} -- 整數，代表要補的圈數
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{X\_pad} -- 補零後的陣列, shape (N, C, H + 2 * pad, W + 2 *
+  pad)
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{conv\_forward}: CNN 的前向傳播
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{A\_prev} -- 上一層的輸出 (輸入圖片), shape (N, C\_prev,
+  H\_prev, W\_prev)
+\item
+  \texttt{W} -- Filter 權重, shape (n\_filters, C\_prev, f, f)
+\item
+  \texttt{b} -- bias, shape (n\_filters, 1)
+\item
+  \texttt{stride} -- 滑動步長
+\item
+  \texttt{padding} -- 補零圈數
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{Z} -- 卷積層的輸出, shape (N, n\_filters, H\_out, W\_out)
+\item
+  \texttt{cache} -- 用於反向傳播的快取
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{zero\PYZus{}pad}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{pad}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} cp.pad 的用法和 np.pad 相同}
+    \PY{c+c1}{\PYZsh{} ((0, 0), (0, 0), (pad, pad), (pad, pad)) 分別對應 4 個維度的補零設定}
+    \PY{n}{X\PYZus{}pad} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{pad}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{p}{(}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n}{pad}\PY{p}{,} \PY{n}{pad}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n}{pad}\PY{p}{,} \PY{n}{pad}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{mode}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{constant}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{constant\PYZus{}values}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{return} \PY{n}{X\PYZus{}pad}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{conv\PYZus{}forward}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{W}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{padding}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} 1. 從 W 的維度取得濾波器資訊}
+    \PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{C\PYZus{}prev}\PY{p}{,} \PY{n}{f}\PY{p}{,} \PY{n}{f}\PY{p}{)} \PY{o}{=} \PY{n}{W}\PY{o}{.}\PY{n}{shape}
+    \PY{c+c1}{\PYZsh{} 從 A\PYZus{}prev 的維度取得輸入資訊}
+    \PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{C\PYZus{}prev}\PY{p}{,} \PY{n}{H\PYZus{}prev}\PY{p}{,} \PY{n}{W\PYZus{}prev}\PY{p}{)} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{shape}
+
+    \PY{c+c1}{\PYZsh{} 2. 計算輸出特徵圖的維度}
+    \PY{n}{H\PYZus{}out} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{H\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{f} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding}\PY{p}{)} \PY{o}{/} \PY{n}{stride}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+    \PY{n}{W\PYZus{}out} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{W\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{f} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding}\PY{p}{)} \PY{o}{/} \PY{n}{stride}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+
+    \PY{c+c1}{\PYZsh{} 3. 初始化輸出 Z}
+    \PY{n}{Z} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{H\PYZus{}out}\PY{p}{,} \PY{n}{W\PYZus{}out}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 4. 對輸入 A\PYZus{}prev 進行補零}
+    \PY{n}{A\PYZus{}prev\PYZus{}pad} \PY{o}{=} \PY{n}{zero\PYZus{}pad}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{padding}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 5. 進行卷積運算 (使用巢狀迴圈)}
+    \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} 遍歷每一張圖片樣本}
+        \PY{n}{a\PYZus{}prev\PYZus{}pad} \PY{o}{=} \PY{n}{A\PYZus{}prev\PYZus{}pad}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+        \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} 遍歷每一個 Filter}
+            \PY{k}{for} \PY{n}{h} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{H\PYZus{}out}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} 遍歷輸出的垂直方向}
+                \PY{k}{for} \PY{n}{w} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{W\PYZus{}out}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} 遍歷輸出的水平方向}
+                    \PY{c+c1}{\PYZsh{} 定位當前滑動窗口的垂直和水平起始位置}
+                    \PY{n}{vert\PYZus{}start} \PY{o}{=} \PY{n}{h} \PY{o}{*} \PY{n}{stride}
+                    \PY{n}{vert\PYZus{}end} \PY{o}{=} \PY{n}{vert\PYZus{}start} \PY{o}{+} \PY{n}{f}
+                    \PY{n}{horiz\PYZus{}start} \PY{o}{=} \PY{n}{w} \PY{o}{*} \PY{n}{stride}
+                    \PY{n}{horiz\PYZus{}end} \PY{o}{=} \PY{n}{horiz\PYZus{}start} \PY{o}{+} \PY{n}{f}
+
+                    \PY{c+c1}{\PYZsh{} 選取當前的滑動窗口}
+                    \PY{n}{a\PYZus{}slice\PYZus{}prev} \PY{o}{=} \PY{n}{a\PYZus{}prev\PYZus{}pad}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{vert\PYZus{}start}\PY{p}{:}\PY{n}{vert\PYZus{}end}\PY{p}{,} \PY{n}{horiz\PYZus{}start}\PY{p}{:}\PY{n}{horiz\PYZus{}end}\PY{p}{]}
+
+                    \PY{c+c1}{\PYZsh{} 進行對應元素相乘後相加，再加上 bias}
+                    \PY{n}{Z}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{h}\PY{p}{,} \PY{n}{w}\PY{p}{]} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{a\PYZus{}slice\PYZus{}prev} \PY{o}{*} \PY{n}{W}\PY{p}{[}\PY{n}{c}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]}\PY{p}{)} \PY{o}{+} \PY{n}{b}\PY{p}{[}\PY{n}{c}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} 儲存快取以供反向傳播使用}
+    \PY{n}{cache} \PY{o}{=} \PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{W}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{stride}\PY{p}{,} \PY{n}{padding}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{Z}\PY{p}{,} \PY{n}{cache}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{Step 2-2-2:
+優化前向傳播}\label{step-2-2-2-ux512aux5316ux524dux5411ux50b3ux64ad}
+
+在執行過程我發現這種四層 for 迴圈的寫法效能實在太低，所以我們改用 im2col
+的寫法來改進
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{get\PYZus{}im2col\PYZus{}indices}\PY{p}{(}\PY{n}{x\PYZus{}shape}\PY{p}{,} \PY{n}{field\PYZus{}height}\PY{p}{,} \PY{n}{field\PYZus{}width}\PY{p}{,} \PY{n}{padding}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} First figure out what the output shape is}
+    \PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{W} \PY{o}{=} \PY{n}{x\PYZus{}shape}
+    \PY{k}{assert} \PY{p}{(}\PY{n}{H} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding} \PY{o}{\PYZhy{}} \PY{n}{field\PYZus{}height}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{n}{stride} \PY{o}{==} \PY{l+m+mi}{0}
+    \PY{k}{assert} \PY{p}{(}\PY{n}{W} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding} \PY{o}{\PYZhy{}} \PY{n}{field\PYZus{}width}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{n}{stride} \PY{o}{==} \PY{l+m+mi}{0}
+    \PY{n}{out\PYZus{}height} \PY{o}{=} \PY{p}{(}\PY{n}{H} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding} \PY{o}{\PYZhy{}} \PY{n}{field\PYZus{}height}\PY{p}{)} \PY{o}{/}\PY{o}{/} \PY{n}{stride} \PY{o}{+} \PY{l+m+mi}{1}
+    \PY{n}{out\PYZus{}width} \PY{o}{=} \PY{p}{(}\PY{n}{W} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding} \PY{o}{\PYZhy{}} \PY{n}{field\PYZus{}width}\PY{p}{)} \PY{o}{/}\PY{o}{/} \PY{n}{stride} \PY{o}{+} \PY{l+m+mi}{1}
+
+    \PY{n}{i0} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{repeat}\PY{p}{(}\PY{n}{cp}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{field\PYZus{}height}\PY{p}{)}\PY{p}{,} \PY{n}{field\PYZus{}width}\PY{p}{)}
+    \PY{n}{i0} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{tile}\PY{p}{(}\PY{n}{i0}\PY{p}{,} \PY{n}{C}\PY{p}{)}
+    \PY{n}{i1} \PY{o}{=} \PY{n}{stride} \PY{o}{*} \PY{n}{cp}\PY{o}{.}\PY{n}{repeat}\PY{p}{(}\PY{n}{cp}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{out\PYZus{}height}\PY{p}{)}\PY{p}{,} \PY{n}{out\PYZus{}width}\PY{p}{)}
+    \PY{n}{j0} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{tile}\PY{p}{(}\PY{n}{cp}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{field\PYZus{}width}\PY{p}{)}\PY{p}{,} \PY{n}{field\PYZus{}height} \PY{o}{*} \PY{n}{C}\PY{p}{)}
+    \PY{n}{j1} \PY{o}{=} \PY{n}{stride} \PY{o}{*} \PY{n}{cp}\PY{o}{.}\PY{n}{tile}\PY{p}{(}\PY{n}{cp}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{out\PYZus{}width}\PY{p}{)}\PY{p}{,} \PY{n}{out\PYZus{}height}\PY{p}{)}
+    \PY{n}{i} \PY{o}{=} \PY{n}{i0}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{+} \PY{n}{i1}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{n}{j} \PY{o}{=} \PY{n}{j0}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{+} \PY{n}{j1}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{n}{k} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{repeat}\PY{p}{(}\PY{n}{cp}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{C}\PY{p}{)}\PY{p}{,} \PY{n}{field\PYZus{}height} \PY{o}{*} \PY{n}{field\PYZus{}width}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{k}{return} \PY{p}{(}\PY{n}{k}\PY{p}{,} \PY{n}{i}\PY{p}{,} \PY{n}{j}\PY{p}{)}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{im2col\PYZus{}gpu}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{field\PYZus{}height}\PY{p}{,} \PY{n}{field\PYZus{}width}\PY{p}{,} \PY{n}{padding}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} An implementation of im2col on GPU \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{c+c1}{\PYZsh{} Zero\PYZhy{}pad the input}
+    \PY{n}{p} \PY{o}{=} \PY{n}{padding}
+    \PY{n}{x\PYZus{}padded} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{pad}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{p}{(}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n}{p}\PY{p}{,} \PY{n}{p}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n}{p}\PY{p}{,} \PY{n}{p}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{mode}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{constant}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+    \PY{n}{k}\PY{p}{,} \PY{n}{i}\PY{p}{,} \PY{n}{j} \PY{o}{=} \PY{n}{get\PYZus{}im2col\PYZus{}indices}\PY{p}{(}\PY{n}{x}\PY{o}{.}\PY{n}{shape}\PY{p}{,} \PY{n}{field\PYZus{}height}\PY{p}{,} \PY{n}{field\PYZus{}width}\PY{p}{,} \PY{n}{padding}\PY{p}{,} \PY{n}{stride}\PY{p}{)}
+
+    \PY{n}{cols} \PY{o}{=} \PY{n}{x\PYZus{}padded}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{i}\PY{p}{,} \PY{n}{j}\PY{p}{]}
+    \PY{n}{C} \PY{o}{=} \PY{n}{x}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+    \PY{n}{cols} \PY{o}{=} \PY{n}{cols}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{field\PYZus{}height} \PY{o}{*} \PY{n}{field\PYZus{}width} \PY{o}{*} \PY{n}{C}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{k}{return} \PY{n}{cols}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{conv\PYZus{}forward\PYZus{}fast}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{W}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{padding}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+
+    \PY{c+c1}{\PYZsh{} 從 A\PYZus{}prev 的維度取得輸入資訊}
+    \PY{n}{N}\PY{p}{,} \PY{n}{C\PYZus{}prev}\PY{p}{,} \PY{n}{H\PYZus{}prev}\PY{p}{,} \PY{n}{W\PYZus{}prev} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{shape}
+
+    \PY{c+c1}{\PYZsh{} 從 W (權重) 的維度取得 Filter 資訊}
+    \PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{f}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o}{=} \PY{n}{W}\PY{o}{.}\PY{n}{shape}
+
+    \PY{c+c1}{\PYZsh{} 計算輸出維度}
+    \PY{n}{H\PYZus{}out} \PY{o}{=} \PY{p}{(}\PY{n}{H\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{f} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding}\PY{p}{)} \PY{o}{/}\PY{o}{/} \PY{n}{stride} \PY{o}{+} \PY{l+m+mi}{1}
+    \PY{n}{W\PYZus{}out} \PY{o}{=} \PY{p}{(}\PY{n}{W\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{f} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding}\PY{p}{)} \PY{o}{/}\PY{o}{/} \PY{n}{stride} \PY{o}{+} \PY{l+m+mi}{1}
+
+    \PY{c+c1}{\PYZsh{} 使用 im2col 將輸入圖片轉換為矩陣}
+    \PY{n}{A\PYZus{}col} \PY{o}{=} \PY{n}{im2col\PYZus{}gpu}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{f}\PY{p}{,} \PY{n}{f}\PY{p}{,} \PY{n}{padding}\PY{o}{=}\PY{n}{padding}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{n}{stride}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 將 Filter 權重攤平成矩陣}
+    \PY{n}{W\PYZus{}row} \PY{o}{=} \PY{n}{W}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 核心運算：一次矩陣乘法 + bias}
+    \PY{n}{Z} \PY{o}{=} \PY{n}{W\PYZus{}row} \PY{o}{@} \PY{n}{A\PYZus{}col} \PY{o}{+} \PY{n}{b}
+
+    \PY{c+c1}{\PYZsh{} 將結果塑形成最終的輸出維度}
+    \PY{n}{Z} \PY{o}{=} \PY{n}{Z}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{H\PYZus{}out}\PY{p}{,} \PY{n}{W\PYZus{}out}\PY{p}{,} \PY{n}{N}\PY{p}{)}
+    \PY{n}{Z} \PY{o}{=} \PY{n}{Z}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)} \PY{c+c1}{\PYZsh{} 調整維度順序為 (N, n\PYZus{}filters, H\PYZus{}out, W\PYZus{}out)}
+
+    \PY{c+c1}{\PYZsh{} 快取 A\PYZus{}col 供反向傳播使用}
+    \PY{n}{cache} \PY{o}{=} \PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{W}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{stride}\PY{p}{,} \PY{n}{padding}\PY{p}{,} \PY{n}{A\PYZus{}col}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{Z}\PY{p}{,} \PY{n}{cache}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Step 2-3: 實作 Activation Function
+(ReLU)}\label{step-2-3-ux5be6ux4f5c-activation-function-relu}
+
+ReLU 的反向傳播
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{dA} -- 流回來的梯度
+\item
+  \texttt{cache\_Z} -- 前向傳播時的 Z 值
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{dZ} -- 對 Z 的梯度
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{relu}\PY{p}{(}\PY{n}{Z}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{cp}\PY{o}{.}\PY{n}{maximum}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{Z}\PY{p}{)}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{relu\PYZus{}backward}\PY{p}{(}\PY{n}{dA}\PY{p}{,} \PY{n}{cache\PYZus{}Z}\PY{p}{)}\PY{p}{:}
+    \PY{n}{dZ} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{dA}\PY{p}{,} \PY{n}{copy}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} 當 Z \PYZlt{}= 0 時，梯度也為 0}
+    \PY{n}{dZ}\PY{p}{[}\PY{n}{cache\PYZus{}Z} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{k}{return} \PY{n}{dZ}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Step 2-4: 實作池化層 Forward
+Propagation}\label{step-2-4-ux5be6ux4f5cux6c60ux5316ux5c64-forward-propagation}
+
+實現 Max Pooling 的前向傳播
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{A\_prev} -- 上一層的輸出 (ReLU), shape (N, C, H\_prev,
+  W\_prev)
+\item
+  \texttt{pool\_size} -- 池化窗口的大小
+\item
+  \texttt{stride} -- 滑動步長
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{A\_out} -- 池化層的輸出, shape (N, C, H\_out, W\_out)
+\item
+  \texttt{cache} -- 用於反向傳播的快取，包含 A\_prev 和超參數
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{max\PYZus{}pool\PYZus{}forward}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{pool\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{c+c1}{\PYZsh{} 取得輸入維度}
+    \PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H\PYZus{}prev}\PY{p}{,} \PY{n}{W\PYZus{}prev}\PY{p}{)} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{shape}
+
+    \PY{c+c1}{\PYZsh{} 計算輸出維度}
+    \PY{n}{H\PYZus{}out} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{H\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{pool\PYZus{}size}\PY{p}{)} \PY{o}{/} \PY{n}{stride}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+    \PY{n}{W\PYZus{}out} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{W\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{pool\PYZus{}size}\PY{p}{)} \PY{o}{/} \PY{n}{stride}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+
+    \PY{c+c1}{\PYZsh{} 初始化輸出}
+    \PY{n}{A\PYZus{}out} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H\PYZus{}out}\PY{p}{,} \PY{n}{W\PYZus{}out}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 進行最大池化運算}
+    \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{C}\PY{p}{)}\PY{p}{:}
+            \PY{k}{for} \PY{n}{h} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{H\PYZus{}out}\PY{p}{)}\PY{p}{:}
+                \PY{k}{for} \PY{n}{w} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{W\PYZus{}out}\PY{p}{)}\PY{p}{:}
+                    \PY{c+c1}{\PYZsh{} 定位當前滑動窗口}
+                    \PY{n}{vert\PYZus{}start} \PY{o}{=} \PY{n}{h} \PY{o}{*} \PY{n}{stride}
+                    \PY{n}{vert\PYZus{}end} \PY{o}{=} \PY{n}{vert\PYZus{}start} \PY{o}{+} \PY{n}{pool\PYZus{}size}
+                    \PY{n}{horiz\PYZus{}start} \PY{o}{=} \PY{n}{w} \PY{o}{*} \PY{n}{stride}
+                    \PY{n}{horiz\PYZus{}end} \PY{o}{=} \PY{n}{horiz\PYZus{}start} \PY{o}{+} \PY{n}{pool\PYZus{}size}
+
+                    \PY{c+c1}{\PYZsh{} 選取滑動窗口}
+                    \PY{n}{a\PYZus{}slice} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{vert\PYZus{}start}\PY{p}{:}\PY{n}{vert\PYZus{}end}\PY{p}{,} \PY{n}{horiz\PYZus{}start}\PY{p}{:}\PY{n}{horiz\PYZus{}end}\PY{p}{]}
+
+                    \PY{c+c1}{\PYZsh{} 在窗口中找到最大值並賦給輸出}
+                    \PY{n}{A\PYZus{}out}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{h}\PY{p}{,} \PY{n}{w}\PY{p}{]} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{a\PYZus{}slice}\PY{p}{)}
+
+    \PY{n}{cache} \PY{o}{=} \PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{p}{(}\PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{stride}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{cache}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{Step 2-4-2:
+優化池化層前向傳播}\label{step-2-4-2-ux512aux5316ux6c60ux5316ux5c64ux524dux5411ux50b3ux64ad}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{max\PYZus{}pool\PYZus{}forward\PYZus{}fast}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{pool\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+
+    \PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H\PYZus{}prev}\PY{p}{,} \PY{n}{W\PYZus{}prev} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{shape}
+
+    \PY{c+c1}{\PYZsh{} 計算輸出維度}
+    \PY{n}{H\PYZus{}out} \PY{o}{=} \PY{l+m+mi}{1} \PY{o}{+} \PY{p}{(}\PY{n}{H\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{pool\PYZus{}size}\PY{p}{)} \PY{o}{/}\PY{o}{/} \PY{n}{stride}
+    \PY{n}{W\PYZus{}out} \PY{o}{=} \PY{l+m+mi}{1} \PY{o}{+} \PY{p}{(}\PY{n}{W\PYZus{}prev} \PY{o}{\PYZhy{}} \PY{n}{pool\PYZus{}size}\PY{p}{)} \PY{o}{/}\PY{o}{/} \PY{n}{stride}
+
+    \PY{c+c1}{\PYZsh{} 透過 reshape 和 transpose 將每個池化窗口的元素分組}
+    \PY{n}{A\PYZus{}reshaped} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H\PYZus{}out}\PY{p}{,} \PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{W\PYZus{}out}\PY{p}{,} \PY{n}{pool\PYZus{}size}\PY{p}{)}
+    \PY{n}{A\PYZus{}transposed} \PY{o}{=} \PY{n}{A\PYZus{}reshaped}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 在每個窗口內取最大值}
+    \PY{n}{A\PYZus{}out} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{A\PYZus{}transposed}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+
+    \PY{n}{cache} \PY{o}{=} \PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{A\PYZus{}out}\PY{p}{,} \PY{p}{(}\PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{stride}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{cache}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Step 2-5: 完整的 Forward
+Propagation}\label{step-2-5-ux5b8cux6574ux7684-forward-propagation}
+
+流程如下：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{CONV\ -\textgreater{}\ RELU}：對圖片進行卷積運算，然後傳給
+  ReLU
+\item
+  \texttt{POOL}: 對 ReLU 的輸出進行 Max Pooling
+\item
+  \texttt{FLATTEN}: 將池化後的特徵圖攤平成一維向量
+\item
+  \texttt{FC-\textgreater{}RELU}: 將攤平的向量輸入全連接層，再通過一次
+  ReLU
+\item
+  \texttt{FC-\textgreater{}SOFTMAX}: 最後通過輸出層，並使用 Softmax
+  函數得到最終的分類機率
+\end{enumerate}
+
+    Softmax 激活函數 (CuPy 版本)
+
+為了數值穩定性，先減去 Z 中的最大值
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{softmax}\PY{p}{(}\PY{n}{Z}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Z.shape: (N, 10), N 是樣本數}
+    \PY{n}{exp\PYZus{}scores} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{n}{Z} \PY{o}{\PYZhy{}} \PY{n}{cp}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{Z}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{exp\PYZus{}scores} \PY{o}{/} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{exp\PYZus{}scores}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    實現 CNN 的完整前向傳播
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{X} -- 輸入資料, shape (N, C, H, W)
+\item
+  \texttt{parameters} -- 包含所有權重的字典
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{A\_out} -- 模型的最終輸出 (Softmax 的結果)
+\item
+  \texttt{cache} -- 包含所有中間層計算結果的字典，供反向傳播使用
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{forward\PYZus{}propagation}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} 1. 取出權重}
+    \PY{n}{W\PYZus{}conv} \PY{o}{=} \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{b\PYZus{}conv} \PY{o}{=} \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{W\PYZus{}fc} \PY{o}{=} \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{b\PYZus{}fc} \PY{o}{=} \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{W\PYZus{}out} \PY{o}{=} \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{b\PYZus{}out} \PY{o}{=} \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} 2. CONV \PYZhy{}\PYZgt{} RELU \PYZhy{}\PYZgt{} POOL}
+    \PY{c+c1}{\PYZsh{} 卷積層}
+    \PY{c+c1}{\PYZsh{} 這裡我們使用固定的 stride=1, padding=1, pool\PYZus{}size=2, pool\PYZus{}stride=2}
+    \PY{n}{Z\PYZus{}conv}\PY{p}{,} \PY{n}{cache\PYZus{}conv} \PY{o}{=} \PY{n}{conv\PYZus{}forward\PYZus{}fast}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{W\PYZus{}conv}\PY{p}{,} \PY{n}{b\PYZus{}conv}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{padding}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} ReLU 激活}
+    \PY{n}{A\PYZus{}conv} \PY{o}{=} \PY{n}{relu}\PY{p}{(}\PY{n}{Z\PYZus{}conv}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 池化層}
+    \PY{n}{A\PYZus{}pool}\PY{p}{,} \PY{n}{cache\PYZus{}pool} \PY{o}{=} \PY{n}{max\PYZus{}pool\PYZus{}forward\PYZus{}fast}\PY{p}{(}\PY{n}{A\PYZus{}conv}\PY{p}{,} \PY{n}{pool\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 3. FLATTEN \PYZhy{}\PYZgt{} FC \PYZhy{}\PYZgt{} RELU}
+    \PY{c+c1}{\PYZsh{} 扁平化}
+    \PY{n}{N} \PY{o}{=} \PY{n}{A\PYZus{}pool}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    \PY{n}{A\PYZus{}flat} \PY{o}{=} \PY{n}{A\PYZus{}pool}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)} \PY{c+c1}{\PYZsh{} \PYZhy{}1 會讓 cupy 自動計算維度}
+
+    \PY{c+c1}{\PYZsh{} 全連接層}
+    \PY{n}{Z\PYZus{}fc} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{A\PYZus{}flat}\PY{p}{,} \PY{n}{W\PYZus{}fc}\PY{p}{)} \PY{o}{+} \PY{n}{b\PYZus{}fc}
+
+    \PY{c+c1}{\PYZsh{} ReLU 激活}
+    \PY{n}{A\PYZus{}fc} \PY{o}{=} \PY{n}{relu}\PY{p}{(}\PY{n}{Z\PYZus{}fc}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 4. OUTPUT LAYER \PYZhy{}\PYZgt{} SOFTMAX}
+    \PY{n}{Z\PYZus{}out} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{A\PYZus{}fc}\PY{p}{,} \PY{n}{W\PYZus{}out}\PY{p}{)} \PY{o}{+} \PY{n}{b\PYZus{}out}
+    \PY{n}{A\PYZus{}out} \PY{o}{=} \PY{n}{softmax}\PY{p}{(}\PY{n}{Z\PYZus{}out}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 5. 儲存所有快取}
+    \PY{c+c1}{\PYZsh{} 這是反向傳播時的關鍵}
+    \PY{n}{cache} \PY{o}{=} \PY{p}{\PYZob{}}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{cache\PYZus{}conv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{cache\PYZus{}conv}\PY{p}{,} \PY{c+c1}{\PYZsh{} (A\PYZus{}prev, W, b, stride, padding)}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Z\PYZus{}conv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{Z\PYZus{}conv}\PY{p}{,} \PY{c+c1}{\PYZsh{} Conv 輸出}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A\PYZus{}conv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{A\PYZus{}conv}\PY{p}{,} \PY{c+c1}{\PYZsh{} Conv 的 ReLU 輸出}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{cache\PYZus{}pool}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{cache\PYZus{}pool}\PY{p}{,} \PY{c+c1}{\PYZsh{} (A\PYZus{}conv, (pool\PYZus{}size, stride))}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A\PYZus{}pool}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{A\PYZus{}pool}\PY{p}{,} \PY{c+c1}{\PYZsh{} Pool 輸出}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A\PYZus{}flat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{A\PYZus{}flat}\PY{p}{,} \PY{c+c1}{\PYZsh{} Flatten 輸出}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Z\PYZus{}fc}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{Z\PYZus{}fc}\PY{p}{,} \PY{c+c1}{\PYZsh{} FC 輸出}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A\PYZus{}fc}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{A\PYZus{}fc}\PY{p}{,} \PY{c+c1}{\PYZsh{} FC 的 ReLU 輸出}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}fc}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{W\PYZus{}fc}\PY{p}{,} \PY{c+c1}{\PYZsh{} FC 權重}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{W\PYZus{}out}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{W\PYZus{}out} \PY{c+c1}{\PYZsh{} Out 權重}
+    \PY{p}{\PYZcb{}}
+
+    \PY{k}{return} \PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{cache}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Step 2-6: 損失函數 Loss
+Function}\label{step-2-6-ux640dux5931ux51fdux6578-loss-function}
+
+跟 HW3 一樣，使用 Cross Entropy
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{A\_out} -- 模型的預測機率輸出, shape (N, num\_classes)
+\item
+  \texttt{Y} -- 真實的 One-Hot 標籤, shape (N, num\_classes)
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{loss} -- 交叉熵損失值 (一個純量)
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{compute\PYZus{}loss}\PY{p}{(}\PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{p}{:}
+
+    \PY{n}{N} \PY{o}{=} \PY{n}{Y}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} 加上一個極小值 1e\PYZhy{}9 是為了避免 log(0) 的情況}
+    \PY{n}{loss} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{Y} \PY{o}{*} \PY{n}{cp}\PY{o}{.}\PY{n}{log}\PY{p}{(}\PY{n}{A\PYZus{}out} \PY{o}{+} \PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{)}\PY{p}{)} \PY{o}{/} \PY{n}{N}
+
+    \PY{k}{return} \PY{n}{loss}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Step 2-7: Backward
+Propagation}\label{step-2-7-backward-propagation}
+
+路徑如下：
+
+\texttt{dLoss/dZ\_out} -\textgreater{} \texttt{dLoss/dA\_fc}
+-\textgreater{} \texttt{dLoss/dZ\_fc} -\textgreater{}
+\texttt{dLoss/dA\_pool} -\textgreater{} \texttt{dLoss/dA\_conv}
+-\textgreater{} \texttt{dLoss/dZ\_conv}
+
+每一步，我們都會計算出對應層的權重梯度 (\texttt{dW}, \texttt{db})
+以及傳遞給前一層的梯度 (\texttt{dA})。
+
+對於「Softmax + Cross Entropy」這個經典組合，起始梯度有個很簡潔的結果：
+
+\[
+\frac{∂Loss}{\partial_{out}}=A_{out}-Y
+\]
+
+其中 \(A_{out}\) 是 Softmax 的預測機率，Y 是正解的 One-Hot
+標籤。這大大簡化了我們的計算。我們就從這個梯度 \texttt{dZ\_out} 開始。
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{A\_out} -- 模型的預測輸出
+\item
+  \texttt{Y} -- 真實的 One-Hot 標籤
+\item
+  \texttt{cache} -- 前向傳播儲存的所有中間值
+\item
+  \texttt{parameters} -- 包含所有權重的字典
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{grads} -- 包含所有權重與 bias 梯度的字典
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{backward\PYZus{}propagation}\PY{p}{(}\PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{cache}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}\PY{p}{:}
+    \PY{n}{grads} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+    \PY{n}{N} \PY{o}{=} \PY{n}{Y}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{c+c1}{\PYZsh{} 批次大小}
+
+    \PY{c+c1}{\PYZsh{} 1. 輸出層的反向傳播}
+    \PY{c+c1}{\PYZsh{} 起始梯度 dZ\PYZus{}out}
+    \PY{n}{dZ\PYZus{}out} \PY{o}{=} \PY{n}{A\PYZus{}out} \PY{o}{\PYZhy{}} \PY{n}{Y}
+
+    \PY{c+c1}{\PYZsh{} 對 W\PYZus{}out, b\PYZus{}out 的梯度}
+    \PY{n}{A\PYZus{}fc} \PY{o}{=} \PY{n}{cache}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dW\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{N}\PY{p}{)} \PY{o}{*} \PY{n}{cp}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{A\PYZus{}fc}\PY{o}{.}\PY{n}{T}\PY{p}{,} \PY{n}{dZ\PYZus{}out}\PY{p}{)}
+    \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{N}\PY{p}{)} \PY{o}{*} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{dZ\PYZus{}out}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 傳遞給前一層 (FC層) 的梯度 dA\PYZus{}fc}
+    \PY{n}{W\PYZus{}out} \PY{o}{=} \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{dA\PYZus{}fc} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{dZ\PYZus{}out}\PY{p}{,} \PY{n}{W\PYZus{}out}\PY{o}{.}\PY{n}{T}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 2. 全連接層 (FC) 的反向傳播 \PYZhy{}\PYZhy{}\PYZhy{}}
+    \PY{c+c1}{\PYZsh{} 首先通過 ReLU 的反向傳播}
+    \PY{n}{Z\PYZus{}fc} \PY{o}{=} \PY{n}{cache}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Z\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{dZ\PYZus{}fc} \PY{o}{=} \PY{n}{relu\PYZus{}backward}\PY{p}{(}\PY{n}{dA\PYZus{}fc}\PY{p}{,} \PY{n}{Z\PYZus{}fc}\PY{p}{)} \PY{c+c1}{\PYZsh{} 我們之前寫好的 relu\PYZus{}backward}
+
+    \PY{c+c1}{\PYZsh{} 對 W\PYZus{}fc, b\PYZus{}fc 的梯度}
+    \PY{n}{A\PYZus{}flat} \PY{o}{=} \PY{n}{cache}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A\PYZus{}flat}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dW\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{N}\PY{p}{)} \PY{o}{*} \PY{n}{cp}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{A\PYZus{}flat}\PY{o}{.}\PY{n}{T}\PY{p}{,} \PY{n}{dZ\PYZus{}fc}\PY{p}{)}
+    \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{N}\PY{p}{)} \PY{o}{*} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{dZ\PYZus{}fc}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{keepdims}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 傳遞給前一層 (扁平層) 的梯度 dA\PYZus{}flat}
+    \PY{n}{W\PYZus{}fc} \PY{o}{=} \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{dA\PYZus{}flat} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{dZ\PYZus{}fc}\PY{p}{,} \PY{n}{W\PYZus{}fc}\PY{o}{.}\PY{n}{T}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 3. 扁平層 (Flatten) 的反向傳播}
+    \PY{c+c1}{\PYZsh{} 這一步只是將梯度從 1D 向量恢復成 4D 陣列}
+    \PY{n}{A\PYZus{}pool} \PY{o}{=} \PY{n}{cache}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A\PYZus{}pool}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{dA\PYZus{}pool} \PY{o}{=} \PY{n}{dA\PYZus{}flat}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{A\PYZus{}pool}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 接下來的兩步 (池化層和卷積層) 比較複雜，我們先把函式框架寫好}
+
+    \PY{c+c1}{\PYZsh{} 4. 池化層 (Pooling) 的反向傳播}
+    \PY{n}{cache\PYZus{}pool} \PY{o}{=} \PY{n}{cache}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cache\PYZus{}pool}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{dA\PYZus{}conv} \PY{o}{=} \PY{n}{max\PYZus{}pool\PYZus{}backward\PYZus{}fast}\PY{p}{(}\PY{n}{dA\PYZus{}pool}\PY{p}{,} \PY{n}{cache\PYZus{}pool}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 5. 卷積層 (Conv) 的反向傳播}
+    \PY{c+c1}{\PYZsh{} 首先通過 ReLU 的反向傳播}
+    \PY{n}{Z\PYZus{}conv} \PY{o}{=} \PY{n}{cache}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Z\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{dZ\PYZus{}conv} \PY{o}{=} \PY{n}{relu\PYZus{}backward}\PY{p}{(}\PY{n}{dA\PYZus{}conv}\PY{p}{,} \PY{n}{Z\PYZus{}conv}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 傳入卷積層反向傳播函式}
+    \PY{n}{cache\PYZus{}conv} \PY{o}{=} \PY{n}{cache}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cache\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{dA\PYZus{}prev}\PY{p}{,} \PY{n}{dW\PYZus{}conv}\PY{p}{,} \PY{n}{db\PYZus{}conv} \PY{o}{=} \PY{n}{conv\PYZus{}backward\PYZus{}fast}\PY{p}{(}\PY{n}{dZ\PYZus{}conv}\PY{p}{,} \PY{n}{cache\PYZus{}conv}\PY{p}{)}
+
+    \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dW\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{dW\PYZus{}conv}
+    \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{db\PYZus{}conv}
+
+    \PY{k}{return} \PY{n}{grads}
+\end{Verbatim}
+\end{tcolorbox}
+
+    上面的程式碼還無法執行，因為我們還缺少 \texttt{max\_pool\_backward} 和
+\texttt{conv\_backward} 這兩個最關鍵的函式。
+
+    \subsubsection{Step 2-7-2:
+池化層的反向傳播}\label{step-2-7-2-ux6c60ux5316ux5c64ux7684ux53cdux5411ux50b3ux64ad}
+
+實現最大池化層的反向傳播
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{dA} -- 池化層輸出的梯度, shape (N, C, H\_out, W\_out)
+\item
+  \texttt{cache} -- 前向傳播的快取 (A\_prev, (pool\_size, stride))
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{dA\_prev} -- 傳遞給前一層的梯度
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{max\PYZus{}pool\PYZus{}backward}\PY{p}{(}\PY{n}{dA}\PY{p}{,} \PY{n}{cache}\PY{p}{)}\PY{p}{:}
+
+    \PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{p}{(}\PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{stride}\PY{p}{)} \PY{o}{=} \PY{n}{cache}
+    \PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H\PYZus{}prev}\PY{p}{,} \PY{n}{W\PYZus{}prev}\PY{p}{)} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{shape}
+    \PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H\PYZus{}out}\PY{p}{,} \PY{n}{W\PYZus{}out}\PY{p}{)} \PY{o}{=} \PY{n}{dA}\PY{o}{.}\PY{n}{shape}
+
+    \PY{n}{dA\PYZus{}prev} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros\PYZus{}like}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{)}
+
+    \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{C}\PY{p}{)}\PY{p}{:}
+            \PY{k}{for} \PY{n}{h} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{H\PYZus{}out}\PY{p}{)}\PY{p}{:}
+                \PY{k}{for} \PY{n}{w} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{W\PYZus{}out}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{vert\PYZus{}start} \PY{o}{=} \PY{n}{h} \PY{o}{*} \PY{n}{stride}
+                    \PY{n}{vert\PYZus{}end} \PY{o}{=} \PY{n}{vert\PYZus{}start} \PY{o}{+} \PY{n}{pool\PYZus{}size}
+                    \PY{n}{horiz\PYZus{}start} \PY{o}{=} \PY{n}{w} \PY{o}{*} \PY{n}{stride}
+                    \PY{n}{horiz\PYZus{}end} \PY{o}{=} \PY{n}{horiz\PYZus{}start} \PY{o}{+} \PY{n}{pool\PYZus{}size}
+
+                    \PY{c+c1}{\PYZsh{} 選取前向傳播時的同一個窗口}
+                    \PY{n}{a\PYZus{}slice} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{vert\PYZus{}start}\PY{p}{:}\PY{n}{vert\PYZus{}end}\PY{p}{,} \PY{n}{horiz\PYZus{}start}\PY{p}{:}\PY{n}{horiz\PYZus{}end}\PY{p}{]}
+
+                    \PY{c+c1}{\PYZsh{} 找到最大值的位置 (mask)}
+                    \PY{n}{mask} \PY{o}{=} \PY{p}{(}\PY{n}{a\PYZus{}slice} \PY{o}{==} \PY{n}{cp}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{a\PYZus{}slice}\PY{p}{)}\PY{p}{)}
+
+                    \PY{c+c1}{\PYZsh{} 將 dA 的梯度加到這個最大值的位置上}
+                    \PY{n}{dA\PYZus{}prev}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{vert\PYZus{}start}\PY{p}{:}\PY{n}{vert\PYZus{}end}\PY{p}{,} \PY{n}{horiz\PYZus{}start}\PY{p}{:}\PY{n}{horiz\PYZus{}end}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{n}{mask} \PY{o}{*} \PY{n}{dA}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{h}\PY{p}{,} \PY{n}{w}\PY{p}{]}
+
+    \PY{k}{return} \PY{n}{dA\PYZus{}prev}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{Step 2-7-3:
+卷積層的反向傳播}\label{step-2-7-3-ux5377ux7a4dux5c64ux7684ux53cdux5411ux50b3ux64ad}
+
+實現卷積層的反向傳播
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{dZ} -- 卷積層輸出的梯度, shape (N, n\_filters, H\_out, W\_out)
+\item
+  \texttt{cache} -- 前向傳播的快取 (A\_prev, W, b, stride, padding)
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{dA\_prev}, \texttt{dW}, \texttt{db}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{conv\PYZus{}backward}\PY{p}{(}\PY{n}{dZ}\PY{p}{,} \PY{n}{cache}\PY{p}{)}\PY{p}{:}
+    \PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{W}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{stride}\PY{p}{,} \PY{n}{padding} \PY{o}{=} \PY{n}{cache}
+    \PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{C\PYZus{}prev}\PY{p}{,} \PY{n}{H\PYZus{}prev}\PY{p}{,} \PY{n}{W\PYZus{}prev}\PY{p}{)} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{shape}
+    \PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{C\PYZus{}prev}\PY{p}{,} \PY{n}{f}\PY{p}{,} \PY{n}{f}\PY{p}{)} \PY{o}{=} \PY{n}{W}\PY{o}{.}\PY{n}{shape}
+    \PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{H\PYZus{}out}\PY{p}{,} \PY{n}{W\PYZus{}out}\PY{p}{)} \PY{o}{=} \PY{n}{dZ}\PY{o}{.}\PY{n}{shape}
+
+    \PY{c+c1}{\PYZsh{} 初始化梯度}
+    \PY{n}{dA\PYZus{}prev} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros\PYZus{}like}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{)}
+    \PY{n}{dW} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros\PYZus{}like}\PY{p}{(}\PY{n}{W}\PY{p}{)}
+    \PY{n}{db} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 對輸入進行補零 (為了計算 dA\PYZus{}prev)}
+    \PY{n}{A\PYZus{}prev\PYZus{}pad} \PY{o}{=} \PY{n}{zero\PYZus{}pad}\PY{p}{(}\PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{padding}\PY{p}{)}
+    \PY{n}{dA\PYZus{}prev\PYZus{}pad} \PY{o}{=} \PY{n}{zero\PYZus{}pad}\PY{p}{(}\PY{n}{dA\PYZus{}prev}\PY{p}{,} \PY{n}{padding}\PY{p}{)}
+
+    \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} 選取單一樣本}
+        \PY{n}{a\PYZus{}prev\PYZus{}pad} \PY{o}{=} \PY{n}{A\PYZus{}prev\PYZus{}pad}\PY{p}{[}\PY{n}{n}\PY{p}{]}
+        \PY{n}{da\PYZus{}prev\PYZus{}pad} \PY{o}{=} \PY{n}{dA\PYZus{}prev\PYZus{}pad}\PY{p}{[}\PY{n}{n}\PY{p}{]}
+
+        \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{)}\PY{p}{:}
+            \PY{k}{for} \PY{n}{h} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{H\PYZus{}out}\PY{p}{)}\PY{p}{:}
+                \PY{k}{for} \PY{n}{w} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{W\PYZus{}out}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{vert\PYZus{}start} \PY{o}{=} \PY{n}{h} \PY{o}{*} \PY{n}{stride}
+                    \PY{n}{vert\PYZus{}end} \PY{o}{=} \PY{n}{vert\PYZus{}start} \PY{o}{+} \PY{n}{f}
+                    \PY{n}{horiz\PYZus{}start} \PY{o}{=} \PY{n}{w} \PY{o}{*} \PY{n}{stride}
+                    \PY{n}{horiz\PYZus{}end} \PY{o}{=} \PY{n}{horiz\PYZus{}start} \PY{o}{+} \PY{n}{f}
+
+                    \PY{c+c1}{\PYZsh{} 定位滑動窗口}
+                    \PY{n}{a\PYZus{}slice} \PY{o}{=} \PY{n}{a\PYZus{}prev\PYZus{}pad}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{vert\PYZus{}start}\PY{p}{:}\PY{n}{vert\PYZus{}end}\PY{p}{,} \PY{n}{horiz\PYZus{}start}\PY{p}{:}\PY{n}{horiz\PYZus{}end}\PY{p}{]}
+
+                    \PY{c+c1}{\PYZsh{} 計算梯度}
+                    \PY{c+c1}{\PYZsh{} 1. 更新傳遞給前一層的梯度 dA\PYZus{}prev}
+                    \PY{n}{da\PYZus{}prev\PYZus{}pad}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{vert\PYZus{}start}\PY{p}{:}\PY{n}{vert\PYZus{}end}\PY{p}{,} \PY{n}{horiz\PYZus{}start}\PY{p}{:}\PY{n}{horiz\PYZus{}end}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{n}{W}\PY{p}{[}\PY{n}{c}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]} \PY{o}{*} \PY{n}{dZ}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{h}\PY{p}{,} \PY{n}{w}\PY{p}{]}
+                    \PY{c+c1}{\PYZsh{} 2. 更新對濾波器的梯度 dW}
+                    \PY{n}{dW}\PY{p}{[}\PY{n}{c}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{n}{a\PYZus{}slice} \PY{o}{*} \PY{n}{dZ}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{h}\PY{p}{,} \PY{n}{w}\PY{p}{]}
+                    \PY{c+c1}{\PYZsh{} 3. 更新對偏置的梯度 db (此處先累加)}
+                    \PY{n}{db}\PY{p}{[}\PY{n}{c}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{n}{dZ}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{n}{h}\PY{p}{,} \PY{n}{w}\PY{p}{]}
+
+        \PY{c+c1}{\PYZsh{} 去掉 dA\PYZus{}prev\PYZus{}pad 的補零部分}
+        \PY{k}{if} \PY{n}{padding} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+            \PY{n}{dA\PYZus{}prev}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{da\PYZus{}prev\PYZus{}pad}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{padding}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{n}{padding}\PY{p}{,} \PY{n}{padding}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{n}{padding}\PY{p}{]}
+        \PY{k}{else}\PY{p}{:}
+            \PY{n}{dA\PYZus{}prev}\PY{p}{[}\PY{n}{n}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{da\PYZus{}prev\PYZus{}pad}
+
+    \PY{c+c1}{\PYZsh{} 對 db 取平均}
+    \PY{n}{db} \PY{o}{=} \PY{n}{db} \PY{o}{/} \PY{n}{N}
+
+    \PY{k}{return} \PY{n}{dA\PYZus{}prev}\PY{p}{,} \PY{n}{dW}\PY{p}{,} \PY{n}{db}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{Step 2-7-4:
+優化卷積層反向傳播}\label{step-2-7-4-ux512aux5316ux5377ux7a4dux5c64ux53cdux5411ux50b3ux64ad}
+
+跟前向傳播時一樣，執行時發現巢狀迴圈效率過差
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from}\PY{+w}{ }\PY{n+nn}{cupy}\PY{n+nn}{.}\PY{n+nn}{lib}\PY{n+nn}{.}\PY{n+nn}{stride\PYZus{}tricks}\PY{+w}{ }\PY{k+kn}{import} \PY{n}{as\PYZus{}strided}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{col2im\PYZus{}gpu}\PY{p}{(}\PY{n}{cols}\PY{p}{,} \PY{n}{x\PYZus{}shape}\PY{p}{,} \PY{n}{field\PYZus{}height}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{field\PYZus{}width}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{padding}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{stride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} An implementation of col2im on GPU \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{W} \PY{o}{=} \PY{n}{x\PYZus{}shape}
+    \PY{n}{H\PYZus{}padded}\PY{p}{,} \PY{n}{W\PYZus{}padded} \PY{o}{=} \PY{n}{H} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding}\PY{p}{,} \PY{n}{W} \PY{o}{+} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{padding}
+    \PY{n}{x\PYZus{}padded} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H\PYZus{}padded}\PY{p}{,} \PY{n}{W\PYZus{}padded}\PY{p}{)}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{cols}\PY{o}{.}\PY{n}{dtype}\PY{p}{)}
+    \PY{n}{k}\PY{p}{,} \PY{n}{i}\PY{p}{,} \PY{n}{j} \PY{o}{=} \PY{n}{get\PYZus{}im2col\PYZus{}indices}\PY{p}{(}\PY{n}{x\PYZus{}shape}\PY{p}{,} \PY{n}{field\PYZus{}height}\PY{p}{,} \PY{n}{field\PYZus{}width}\PY{p}{,} \PY{n}{padding}\PY{p}{,} \PY{n}{stride}\PY{p}{)}
+    \PY{n}{cols\PYZus{}reshaped} \PY{o}{=} \PY{n}{cols}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{C} \PY{o}{*} \PY{n}{field\PYZus{}height} \PY{o}{*} \PY{n}{field\PYZus{}width}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{N}\PY{p}{)}
+    \PY{n}{cols\PYZus{}reshaped} \PY{o}{=} \PY{n}{cols\PYZus{}reshaped}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 使用 cp.add.at 這個原子操作來高效地將梯度加總回去}
+    \PY{n}{cp}\PY{o}{.}\PY{n}{add}\PY{o}{.}\PY{n}{at}\PY{p}{(}\PY{n}{x\PYZus{}padded}\PY{p}{,} \PY{p}{(}\PY{n+nb}{slice}\PY{p}{(}\PY{k+kc}{None}\PY{p}{)}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{i}\PY{p}{,} \PY{n}{j}\PY{p}{)}\PY{p}{,} \PY{n}{cols\PYZus{}reshaped}\PY{p}{)}
+
+    \PY{k}{if} \PY{n}{padding} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+        \PY{k}{return} \PY{n}{x\PYZus{}padded}
+    \PY{k}{return} \PY{n}{x\PYZus{}padded}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{n}{padding}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{n}{padding}\PY{p}{,} \PY{n}{padding}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{n}{padding}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{conv\PYZus{}backward\PYZus{}fast}\PY{p}{(}\PY{n}{dZ}\PY{p}{,} \PY{n}{cache}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    使用 col2im 實現的高效版卷積反向傳播}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{c+c1}{\PYZsh{} 解開 cache}
+    \PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{W}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{stride}\PY{p}{,} \PY{n}{padding}\PY{p}{,} \PY{n}{A\PYZus{}col} \PY{o}{=} \PY{n}{cache}
+    \PY{n}{N}\PY{p}{,} \PY{n}{C}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{W\PYZus{}shape} \PY{o}{=} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o}{=} \PY{n}{W}\PY{o}{.}\PY{n}{shape}
+
+    \PY{c+c1}{\PYZsh{} 計算 db 的梯度}
+    \PY{n}{db} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{dZ}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+    \PY{n}{db} \PY{o}{=} \PY{n}{db}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 重新塑形 dZ 以便進行矩陣乘法}
+    \PY{n}{dZ\PYZus{}reshaped} \PY{o}{=} \PY{n}{dZ}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 計算 dW 的梯度}
+    \PY{n}{dW} \PY{o}{=} \PY{n}{dZ\PYZus{}reshaped} \PY{o}{@} \PY{n}{A\PYZus{}col}\PY{o}{.}\PY{n}{T}
+    \PY{n}{dW} \PY{o}{=} \PY{n}{dW}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{W}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 計算傳遞給前一層的梯度 dA\PYZus{}prev}
+    \PY{n}{W\PYZus{}row} \PY{o}{=} \PY{n}{W}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{n}{dA\PYZus{}col} \PY{o}{=} \PY{n}{W\PYZus{}row}\PY{o}{.}\PY{n}{T} \PY{o}{@} \PY{n}{dZ\PYZus{}reshaped}
+    \PY{n}{dA\PYZus{}prev} \PY{o}{=} \PY{n}{col2im\PYZus{}gpu}\PY{p}{(}\PY{n}{dA\PYZus{}col}\PY{p}{,} \PY{n}{A\PYZus{}prev}\PY{o}{.}\PY{n}{shape}\PY{p}{,} \PY{n}{W}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,} \PY{n}{W}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,} \PY{n}{padding}\PY{p}{,} \PY{n}{stride}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{dA\PYZus{}prev}\PY{p}{,} \PY{n}{dW}\PY{p}{,} \PY{n}{db}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{Step 2-7-5:
+優化池化層的反向傳播}\label{step-2-7-5-ux512aux5316ux6c60ux5316ux5c64ux7684ux53cdux5411ux50b3ux64ad}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{max\PYZus{}pool\PYZus{}backward\PYZus{}fast}\PY{p}{(}\PY{n}{dA}\PY{p}{,} \PY{n}{cache}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} 從快取中取出前向傳播的輸入與輸出}
+    \PY{n}{A\PYZus{}prev}\PY{p}{,} \PY{n}{A\PYZus{}out}\PY{p}{,} \PY{p}{(}\PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{stride}\PY{p}{)} \PY{o}{=} \PY{n}{cache}
+
+    \PY{c+c1}{\PYZsh{} 1. 將池化層輸出的梯度 dA 上採樣}
+    \PY{n}{dA\PYZus{}upsampled} \PY{o}{=} \PY{n}{dA}\PY{o}{.}\PY{n}{repeat}\PY{p}{(}\PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{repeat}\PY{p}{(}\PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 2. 同樣地，將前向傳播的輸出 A\PYZus{}out 上採樣}
+    \PY{n}{A\PYZus{}out\PYZus{}upsampled} \PY{o}{=} \PY{n}{A\PYZus{}out}\PY{o}{.}\PY{n}{repeat}\PY{p}{(}\PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{repeat}\PY{p}{(}\PY{n}{pool\PYZus{}size}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 3. 建立遮罩：A\PYZus{}prev 中等於上採樣後 A\PYZus{}out 的位置，就是當時的最大值}
+    \PY{c+c1}{\PYZsh{} 這些位置的值為 True (1)，其餘為 False (0)}
+    \PY{n}{mask} \PY{o}{=} \PY{p}{(}\PY{n}{A\PYZus{}prev} \PY{o}{==} \PY{n}{A\PYZus{}out\PYZus{}upsampled}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 4. 將上採樣的梯度應用於遮罩，梯度只會流向最大值所在的位置}
+    \PY{n}{dA\PYZus{}prev} \PY{o}{=} \PY{n}{dA\PYZus{}upsampled} \PY{o}{*} \PY{n}{mask}
+
+    \PY{k}{return} \PY{n}{dA\PYZus{}prev}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Step 2-8: 更新權重}\label{step-2-8-ux66f4ux65b0ux6b0aux91cd}
+
+使用梯度下降法更新模型的參數
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{parameters} -- 包含當前權重的字典
+\item
+  \texttt{grads} -- 包含梯度的字典
+\item
+  \texttt{learning\_rate} -- 學習率 (alpha)
+\end{itemize}
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  parameters -- 更新後的參數字典
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{update\PYZus{}parameters}\PY{p}{(}\PY{n}{parameters}\PY{p}{,} \PY{n}{grads}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{p}{)}\PY{p}{:}
+
+    \PY{c+c1}{\PYZsh{} 根據梯度下降規則更新每一個參數}
+    \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dW\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dW\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db\PYZus{}fc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dW\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{learning\PYZus{}rate} \PY{o}{*} \PY{n}{grads}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db\PYZus{}out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+    \PY{k}{return} \PY{n}{parameters}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Step 3: 整合出 CNN
+Model}\label{step-3-ux6574ux5408ux51fa-cnn-model}
+
+    \subsection{Step 3-1: Create the CNN
+Model}\label{step-3-1-create-the-cnn-model}
+
+完整的 CNN 訓練模型
+
+Return:
+
+\begin{itemize}
+\tightlist
+\item
+  trained\_parameters -- 訓練完成後的模型參數
+\item
+  history -- 包含每個 epoch 的 cost 和 accuracy 的字典
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{time} \PY{c+c1}{\PYZsh{} 引入 time 模組來計算訓練時間}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{copy} \PY{c+c1}{\PYZsh{} 我們需要 copy 模組來 deepcopy 權重}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{cnn\PYZus{}model}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{,} \PY{n}{Y\PYZus{}train\PYZus{}orig}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{Y\PYZus{}test\PYZus{}orig}\PY{p}{,}
+              \PY{n}{learning\PYZus{}rate}\PY{o}{=}\PY{l+m+mf}{0.05}\PY{p}{,} \PY{n}{num\PYZus{}epochs}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{batch\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{64}\PY{p}{,}
+              \PY{n}{n\PYZus{}filters}\PY{o}{=}\PY{l+m+mi}{8}\PY{p}{,} \PY{n}{filter\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,}
+              \PY{n}{use\PYZus{}early\PYZus{}stopping}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{early\PYZus{}stopping\PYZus{}patience}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{:}
+
+    \PY{p}{(}\PY{n}{N\PYZus{}train}\PY{p}{,} \PY{n}{C\PYZus{}train}\PY{p}{,} \PY{n}{H\PYZus{}train}\PY{p}{,} \PY{n}{W\PYZus{}train}\PY{p}{)} \PY{o}{=} \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{num\PYZus{}classes} \PY{o}{=} \PY{n}{Y\PYZus{}train}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} 1. 初始化權重}
+    \PY{n}{parameters} \PY{o}{=} \PY{n}{initialize\PYZus{}parameters}\PY{p}{(}\PY{n}{input\PYZus{}dim}\PY{o}{=}\PY{p}{(}\PY{n}{C\PYZus{}train}\PY{p}{,} \PY{n}{H\PYZus{}train}\PY{p}{,} \PY{n}{W\PYZus{}train}\PY{p}{)}\PY{p}{,}
+                                               \PY{n}{n\PYZus{}filters}\PY{o}{=}\PY{n}{n\PYZus{}filters}\PY{p}{,} \PY{n}{filter\PYZus{}size}\PY{o}{=}\PY{n}{filter\PYZus{}size}\PY{p}{,}
+                                               \PY{n}{n\PYZus{}y}\PY{o}{=}\PY{n}{num\PYZus{}classes}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 儲存每個 epoch 的 loss 和 accuracy，用於後續繪圖}
+    \PY{n}{costs} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{accuracies} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} === 早停機制初始化 ===}
+    \PY{k}{if} \PY{n}{use\PYZus{}early\PYZus{}stopping}\PY{p}{:}
+        \PY{n}{patience} \PY{o}{=} \PY{n}{early\PYZus{}stopping\PYZus{}patience}
+        \PY{n}{epochs\PYZus{}no\PYZus{}improve} \PY{o}{=} \PY{l+m+mi}{0}
+        \PY{n}{best\PYZus{}accuracy} \PY{o}{=} \PY{l+m+mf}{0.0}
+        \PY{c+c1}{\PYZsh{} 用來儲存性能最好時的權重}
+        \PY{n}{best\PYZus{}parameters} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+
+    \PY{c+c1}{\PYZsh{} 2. 訓練迴圈}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}epochs}\PY{p}{)}\PY{p}{:}
+        \PY{n}{epoch\PYZus{}start\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+        \PY{n}{epoch\PYZus{}cost} \PY{o}{=} \PY{l+m+mf}{0.0}
+
+        \PY{c+c1}{\PYZsh{} 在每個 epoch 開始前，將資料隨機打亂}
+        \PY{n}{permutation} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{permutation}\PY{p}{(}\PY{n}{N\PYZus{}train}\PY{p}{)}
+        \PY{n}{shuffled\PYZus{}X} \PY{o}{=} \PY{n}{X\PYZus{}train}\PY{p}{[}\PY{n}{permutation}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+        \PY{n}{shuffled\PYZus{}Y} \PY{o}{=} \PY{n}{Y\PYZus{}train}\PY{p}{[}\PY{n}{permutation}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+
+        \PY{c+c1}{\PYZsh{} Mini\PYZhy{}batch 處理}
+        \PY{n}{num\PYZus{}minibatches} \PY{o}{=} \PY{n}{N\PYZus{}train} \PY{o}{/}\PY{o}{/} \PY{n}{batch\PYZus{}size}
+
+        \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}minibatches}\PY{p}{)}\PY{p}{:}
+            \PY{n}{start} \PY{o}{=} \PY{n}{j} \PY{o}{*} \PY{n}{batch\PYZus{}size}
+            \PY{n}{end} \PY{o}{=} \PY{n}{start} \PY{o}{+} \PY{n}{batch\PYZus{}size}
+            \PY{n}{minibatch\PYZus{}X} \PY{o}{=} \PY{n}{shuffled\PYZus{}X}\PY{p}{[}\PY{n}{start}\PY{p}{:}\PY{n}{end}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+            \PY{n}{minibatch\PYZus{}Y} \PY{o}{=} \PY{n}{shuffled\PYZus{}Y}\PY{p}{[}\PY{n}{start}\PY{p}{:}\PY{n}{end}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+
+            \PY{c+c1}{\PYZsh{} a. 前向傳播}
+            \PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{cache} \PY{o}{=} \PY{n}{forward\PYZus{}propagation}\PY{p}{(}\PY{n}{minibatch\PYZus{}X}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} b. 計算損失}
+            \PY{n}{cost} \PY{o}{=} \PY{n}{compute\PYZus{}loss}\PY{p}{(}\PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{minibatch\PYZus{}Y}\PY{p}{)}
+            \PY{n}{epoch\PYZus{}cost} \PY{o}{+}\PY{o}{=} \PY{n}{cost}
+
+            \PY{c+c1}{\PYZsh{} c. 反向傳播}
+            \PY{n}{grads} \PY{o}{=} \PY{n}{backward\PYZus{}propagation}\PY{p}{(}\PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{minibatch\PYZus{}Y}\PY{p}{,} \PY{n}{cache}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} d. 更新參數}
+            \PY{n}{parameters} \PY{o}{=} \PY{n}{update\PYZus{}parameters}\PY{p}{(}\PY{n}{parameters}\PY{p}{,} \PY{n}{grads}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 計算並記錄這個 epoch 的平均損失}
+        \PY{n}{avg\PYZus{}epoch\PYZus{}cost} \PY{o}{=} \PY{n}{epoch\PYZus{}cost} \PY{o}{/} \PY{n}{num\PYZus{}minibatches}
+        \PY{n}{costs}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{avg\PYZus{}epoch\PYZus{}cost}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 在每個 epoch 結束後，用測試集評估準確率}
+        \PY{n}{predictions} \PY{o}{=} \PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}
+        \PY{n}{current\PYZus{}accuracy} \PY{o}{=} \PY{n}{calculate\PYZus{}accuracy}\PY{p}{(}\PY{n}{predictions}\PY{p}{,} \PY{n}{Y\PYZus{}test\PYZus{}orig}\PY{p}{)}
+        \PY{n}{accuracies}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{current\PYZus{}accuracy}\PY{p}{)}
+
+        \PY{n}{epoch\PYZus{}end\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Epoch }\PY{l+s+si}{\PYZob{}}\PY{n}{i}\PY{+w}{ }\PY{o}{+}\PY{+w}{ }\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{/}\PY{l+s+si}{\PYZob{}}\PY{n}{num\PYZus{}epochs}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ \PYZhy{} Cost: }\PY{l+s+si}{\PYZob{}}\PY{n}{avg\PYZus{}epoch\PYZus{}cost}\PY{l+s+si}{:}\PY{l+s+s2}{.6f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ \PYZhy{} Accuracy: }\PY{l+s+si}{\PYZob{}}\PY{n}{current\PYZus{}accuracy}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ \PYZhy{} Time: }\PY{l+s+si}{\PYZob{}}\PY{n}{epoch\PYZus{}end\PYZus{}time}\PY{+w}{ }\PY{o}{\PYZhy{}}\PY{+w}{ }\PY{n}{epoch\PYZus{}start\PYZus{}time}\PY{l+s+si}{:}\PY{l+s+s2}{.2f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 早停機制}
+        \PY{k}{if} \PY{n}{use\PYZus{}early\PYZus{}stopping}\PY{p}{:}
+            \PY{k}{if} \PY{n}{current\PYZus{}accuracy} \PY{o}{\PYZgt{}} \PY{n}{best\PYZus{}accuracy}\PY{p}{:}
+                \PY{n}{best\PYZus{}accuracy} \PY{o}{=} \PY{n}{current\PYZus{}accuracy}
+                \PY{n}{epochs\PYZus{}no\PYZus{}improve} \PY{o}{=} \PY{l+m+mi}{0}
+                \PY{c+c1}{\PYZsh{} deepcopy 目前最好的權重}
+                \PY{n}{best\PYZus{}parameters} \PY{o}{=} \PY{n}{copy}\PY{o}{.}\PY{n}{deepcopy}\PY{p}{(}\PY{n}{parameters}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{}\PYZgt{} Accuracy improved to }\PY{l+s+si}{\PYZob{}}\PY{n}{best\PYZus{}accuracy}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{! Saving model.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{k}{else}\PY{p}{:}
+                \PY{n}{epochs\PYZus{}no\PYZus{}improve} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  \PYZhy{}\PYZgt{} Accuracy did not improve for }\PY{l+s+si}{\PYZob{}}\PY{n}{epochs\PYZus{}no\PYZus{}improve}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ epoch(s).}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+            \PY{k}{if} \PY{n}{epochs\PYZus{}no\PYZus{}improve} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{patience}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{Early stopping triggered after }\PY{l+s+si}{\PYZob{}}\PY{n}{patience}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ epochs with no improvement.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{c+c1}{\PYZsh{} 訓練結束，回傳歷史最佳的權重}
+                \PY{n}{parameters} \PY{o}{=} \PY{n}{best\PYZus{}parameters}
+                \PY{k}{break}
+
+    \PY{n}{history} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{costs}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{costs}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{accuracies}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{accuracies}\PY{p}{\PYZcb{}}
+    \PY{k}{return} \PY{n}{parameters}\PY{p}{,} \PY{n}{history}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} 預測與準確率計算的輔助函式 \PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{predict}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}\PY{p}{:}
+    \PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o}{=} \PY{n}{forward\PYZus{}propagation}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} 找出每個樣本中，機率最高的那個類別的索引 (0\PYZhy{}9)}
+    \PY{n}{predictions} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{argmax}\PY{p}{(}\PY{n}{A\PYZus{}out}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{k}{return} \PY{n}{predictions}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{calculate\PYZus{}accuracy}\PY{p}{(}\PY{n}{predictions}\PY{p}{,} \PY{n}{labels}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} 比較預測結果和正解標籤}
+    \PY{k}{return} \PY{n}{cp}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{n}{labels}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{Step 3-2: 訓練模型}\label{step-3-2-ux8a13ux7df4ux6a21ux578b}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 設定超參數}
+\PY{n}{LEARNING\PYZus{}RATE} \PY{o}{=} \PY{l+m+mf}{0.05}
+\PY{n}{NUM\PYZus{}EPOCHS} \PY{o}{=} \PY{l+m+mi}{100}
+\PY{n}{BATCH\PYZus{}SIZE} \PY{o}{=} \PY{l+m+mi}{64}
+\PY{n}{N\PYZus{}FILTERS} \PY{o}{=} \PY{l+m+mi}{32}
+\PY{n}{FILTER\PYZus{}SIZE} \PY{o}{=} \PY{l+m+mi}{3}
+\PY{n}{PATIENCE} \PY{o}{=} \PY{l+m+mi}{10}
+
+\PY{c+c1}{\PYZsh{} 開始訓練}
+\PY{n}{trained\PYZus{}parameters}\PY{p}{,} \PY{n}{history} \PY{o}{=} \PY{n}{cnn\PYZus{}model}\PY{p}{(}
+    \PY{n}{train\PYZus{}x}\PY{p}{,} \PY{n}{train\PYZus{}y}\PY{p}{,} \PY{n}{train\PYZus{}y\PYZus{}orig}\PY{p}{,}
+    \PY{n}{test\PYZus{}x}\PY{p}{,} \PY{n}{test\PYZus{}y\PYZus{}orig}\PY{p}{,}
+    \PY{n}{learning\PYZus{}rate}\PY{o}{=}\PY{n}{LEARNING\PYZus{}RATE}\PY{p}{,}
+    \PY{n}{num\PYZus{}epochs}\PY{o}{=}\PY{n}{NUM\PYZus{}EPOCHS}\PY{p}{,}
+    \PY{n}{batch\PYZus{}size}\PY{o}{=}\PY{n}{BATCH\PYZus{}SIZE}\PY{p}{,}
+    \PY{n}{n\PYZus{}filters}\PY{o}{=}\PY{n}{N\PYZus{}FILTERS}\PY{p}{,}
+    \PY{n}{filter\PYZus{}size}\PY{o}{=}\PY{n}{FILTER\PYZus{}SIZE}\PY{p}{,}
+    \PY{n}{use\PYZus{}early\PYZus{}stopping}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}
+    \PY{c+c1}{\PYZsh{} 如果連續 PATIENCE 次 accuracy 沒有提升就停止}
+    \PY{n}{early\PYZus{}stopping\PYZus{}patience}\PY{o}{=}\PY{n}{PATIENCE}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Epoch 1/100 - Cost: 0.402958 - Accuracy: 0.9508 - Time: 19.36s
+  -> Accuracy improved to 0.9508! Saving model.
+Epoch 2/100 - Cost: 0.134227 - Accuracy: 0.9645 - Time: 8.23s
+  -> Accuracy improved to 0.9645! Saving model.
+Epoch 3/100 - Cost: 0.098766 - Accuracy: 0.9617 - Time: 8.31s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 4/100 - Cost: 0.076742 - Accuracy: 0.9744 - Time: 8.39s
+  -> Accuracy improved to 0.9744! Saving model.
+Epoch 5/100 - Cost: 0.058125 - Accuracy: 0.9736 - Time: 8.42s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 6/100 - Cost: 0.046284 - Accuracy: 0.9814 - Time: 8.45s
+  -> Accuracy improved to 0.9814! Saving model.
+Epoch 7/100 - Cost: 0.038609 - Accuracy: 0.9812 - Time: 8.55s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 8/100 - Cost: 0.031190 - Accuracy: 0.9822 - Time: 8.56s
+  -> Accuracy improved to 0.9822! Saving model.
+Epoch 9/100 - Cost: 0.024794 - Accuracy: 0.9818 - Time: 8.52s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 10/100 - Cost: 0.020114 - Accuracy: 0.9840 - Time: 8.47s
+  -> Accuracy improved to 0.9840! Saving model.
+Epoch 11/100 - Cost: 0.016269 - Accuracy: 0.9814 - Time: 8.94s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 12/100 - Cost: 0.014241 - Accuracy: 0.9848 - Time: 8.44s
+  -> Accuracy improved to 0.9848! Saving model.
+Epoch 13/100 - Cost: 0.010336 - Accuracy: 0.9839 - Time: 8.39s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 14/100 - Cost: 0.008706 - Accuracy: 0.9843 - Time: 8.44s
+  -> Accuracy did not improve for 2 epoch(s).
+Epoch 15/100 - Cost: 0.005845 - Accuracy: 0.9854 - Time: 8.45s
+  -> Accuracy improved to 0.9854! Saving model.
+Epoch 16/100 - Cost: 0.004464 - Accuracy: 0.9826 - Time: 8.45s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 17/100 - Cost: 0.006639 - Accuracy: 0.9852 - Time: 8.43s
+  -> Accuracy did not improve for 2 epoch(s).
+Epoch 18/100 - Cost: 0.004916 - Accuracy: 0.9826 - Time: 8.48s
+  -> Accuracy did not improve for 3 epoch(s).
+Epoch 19/100 - Cost: 0.003173 - Accuracy: 0.9854 - Time: 8.46s
+  -> Accuracy did not improve for 4 epoch(s).
+Epoch 20/100 - Cost: 0.001940 - Accuracy: 0.9843 - Time: 8.43s
+  -> Accuracy did not improve for 5 epoch(s).
+Epoch 21/100 - Cost: 0.001605 - Accuracy: 0.9855 - Time: 8.46s
+  -> Accuracy improved to 0.9855! Saving model.
+Epoch 22/100 - Cost: 0.000699 - Accuracy: 0.9855 - Time: 9.67s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 23/100 - Cost: 0.000546 - Accuracy: 0.9853 - Time: 9.06s
+  -> Accuracy did not improve for 2 epoch(s).
+Epoch 24/100 - Cost: 0.000499 - Accuracy: 0.9859 - Time: 8.41s
+  -> Accuracy improved to 0.9859! Saving model.
+Epoch 25/100 - Cost: 0.000452 - Accuracy: 0.9850 - Time: 8.43s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 26/100 - Cost: 0.000570 - Accuracy: 0.9856 - Time: 8.44s
+  -> Accuracy did not improve for 2 epoch(s).
+Epoch 27/100 - Cost: 0.000286 - Accuracy: 0.9859 - Time: 8.50s
+  -> Accuracy did not improve for 3 epoch(s).
+Epoch 28/100 - Cost: 0.000190 - Accuracy: 0.9860 - Time: 8.41s
+  -> Accuracy improved to 0.9860! Saving model.
+Epoch 29/100 - Cost: 0.000160 - Accuracy: 0.9857 - Time: 8.70s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 30/100 - Cost: 0.000152 - Accuracy: 0.9854 - Time: 8.44s
+  -> Accuracy did not improve for 2 epoch(s).
+Epoch 31/100 - Cost: 0.000148 - Accuracy: 0.9856 - Time: 8.46s
+  -> Accuracy did not improve for 3 epoch(s).
+Epoch 32/100 - Cost: 0.000131 - Accuracy: 0.9860 - Time: 8.42s
+  -> Accuracy did not improve for 4 epoch(s).
+Epoch 33/100 - Cost: 0.000127 - Accuracy: 0.9860 - Time: 8.48s
+  -> Accuracy did not improve for 5 epoch(s).
+Epoch 34/100 - Cost: 0.000113 - Accuracy: 0.9856 - Time: 8.53s
+  -> Accuracy did not improve for 6 epoch(s).
+Epoch 35/100 - Cost: 0.000103 - Accuracy: 0.9858 - Time: 8.43s
+  -> Accuracy did not improve for 7 epoch(s).
+Epoch 36/100 - Cost: 0.000099 - Accuracy: 0.9857 - Time: 8.49s
+  -> Accuracy did not improve for 8 epoch(s).
+Epoch 37/100 - Cost: 0.000095 - Accuracy: 0.9856 - Time: 8.48s
+  -> Accuracy did not improve for 9 epoch(s).
+Epoch 38/100 - Cost: 0.000090 - Accuracy: 0.9854 - Time: 8.46s
+  -> Accuracy did not improve for 10 epoch(s).
+
+Early stopping triggered after 10 epochs with no improvement.
+    \end{Verbatim}
+
+    \subsection{Step 3-3:
+儲存及載入參數的函數}\label{step-3-3-ux5132ux5b58ux53caux8f09ux5165ux53c3ux6578ux7684ux51fdux6578}
+
+儲存模型的權重參數
+
+參數:
+
+\begin{itemize}
+\tightlist
+\item
+  parameters: 包含 CuPy 陣列的權重字典
+\item
+  filename: 要儲存的檔案名稱
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{save\PYZus{}parameters}\PY{p}{(}\PY{n}{parameters}\PY{p}{,} \PY{n}{filename}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{my\PYZus{}cnn\PYZus{}model.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Saving parameters to }\PY{l+s+si}{\PYZob{}}\PY{n}{filename}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{...}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 建立一個新的字典，用來存放轉換後的 NumPy 陣列}
+    \PY{n}{numpy\PYZus{}params} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+    \PY{k}{for} \PY{n}{key}\PY{p}{,} \PY{n}{value} \PY{o+ow}{in} \PY{n}{parameters}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} 使用 cp.asnumpy() 將 CuPy 陣列轉為 NumPy 陣列}
+        \PY{n}{numpy\PYZus{}params}\PY{p}{[}\PY{n}{key}\PY{p}{]} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{value}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 使用 np.savez\PYZus{}compressed 儲存，**numpy\PYZus{}params 會自動解包成關鍵字參數}
+    \PY{n}{np}\PY{o}{.}\PY{n}{savez\PYZus{}compressed}\PY{p}{(}\PY{n}{filename}\PY{p}{,} \PY{o}{*}\PY{o}{*}\PY{n}{numpy\PYZus{}params}\PY{p}{)}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Parameters saved successfully.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{os}
+
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{load\PYZus{}parameters}\PY{p}{(}\PY{n}{filename}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{my\PYZus{}cnn\PYZus{}model.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{o+ow}{not} \PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{exists}\PY{p}{(}\PY{n}{filename}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Error: File }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{filename}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ not found.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{return} \PY{k+kc}{None}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Loading parameters from }\PY{l+s+si}{\PYZob{}}\PY{n}{filename}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{...}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 載入 .npz 檔案，它是一個類字典物件}
+    \PY{n}{npzfile} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{load}\PY{p}{(}\PY{n}{filename}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 建立一個新的字典，用來存放轉換後的 CuPy 陣列}
+    \PY{n}{parameters} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+    \PY{k}{for} \PY{n}{key} \PY{o+ow}{in} \PY{n}{npzfile}\PY{o}{.}\PY{n}{keys}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} 使用 cp.asarray() 將 NumPy 陣列轉為 CuPy 陣列}
+        \PY{n}{parameters}\PY{p}{[}\PY{n}{key}\PY{p}{]} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{npzfile}\PY{p}{[}\PY{n}{key}\PY{p}{]}\PY{p}{)}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Parameters loaded successfully.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{parameters}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{save\PYZus{}parameters}\PY{p}{(}\PY{n}{trained\PYZus{}parameters}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{my\PYZus{}cnn\PYZus{}model.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Saving parameters to my\_cnn\_model.npz{\ldots}
+Parameters saved successfully.
+    \end{Verbatim}
+
+    \section{Step 4:
+最終評估與報告}\label{step-4-ux6700ux7d42ux8a55ux4f30ux8207ux5831ux544a}
+
+    \subsection{Step 4-1: 最終預測}\label{step-4-1-ux6700ux7d42ux9810ux6e2c}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{trained\PYZus{}parameters} \PY{o}{=} \PY{n}{load\PYZus{}parameters}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{my\PYZus{}cnn\PYZus{}model.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Loading parameters from my\_cnn\_model.npz{\ldots}
+Parameters loaded successfully.
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 1. 進行最終預測}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Making final predictions on the test set...}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{test\PYZus{}predictions} \PY{o}{=} \PY{n}{predict}\PY{p}{(}\PY{n}{test\PYZus{}x}\PY{p}{,} \PY{n}{trained\PYZus{}parameters}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 2. 確認最終準確率}
+\PY{n}{final\PYZus{}accuracy} \PY{o}{=} \PY{n}{calculate\PYZus{}accuracy}\PY{p}{(}\PY{n}{test\PYZus{}predictions}\PY{p}{,} \PY{n}{test\PYZus{}y\PYZus{}orig}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} 使用 cp.asnumpy() 將 CuPy 純量轉為 Python 純量以便格式化輸出}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Final model accuracy: }\PY{l+s+si}{\PYZob{}}\PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{final\PYZus{}accuracy}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{100}\PY{l+s+si}{:}\PY{l+s+s2}{.2f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Making final predictions on the test set{\ldots}
+Final model accuracy: 98.60\%
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 3. 建立混淆矩陣}
+\PY{n}{num\PYZus{}classes} \PY{o}{=} \PY{l+m+mi}{10}
+\PY{c+c1}{\PYZsh{} 初始化一個 10x10 的 CuPy 矩陣}
+\PY{n}{confusion\PYZus{}matrix\PYZus{}cp} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{num\PYZus{}classes}\PY{p}{,} \PY{n}{num\PYZus{}classes}\PY{p}{)}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n+nb}{int}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 遍歷所有測試集樣本，填充混淆矩陣}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{test\PYZus{}y\PYZus{}orig}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{true\PYZus{}label} \PY{o}{=} \PY{n}{test\PYZus{}y\PYZus{}orig}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{predicted\PYZus{}label} \PY{o}{=} \PY{n}{test\PYZus{}predictions}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{confusion\PYZus{}matrix\PYZus{}cp}\PY{p}{[}\PY{n}{true\PYZus{}label}\PY{p}{,} \PY{n}{predicted\PYZus{}label}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 4. 視覺化混淆矩陣}
+\PY{c+c1}{\PYZsh{} 記得要先用 .asnumpy() 將矩陣從 GPU 移回 CPU}
+\PY{n}{confusion\PYZus{}matrix\PYZus{}np} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{confusion\PYZus{}matrix\PYZus{}cp}\PY{p}{)}
+
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{seaborn}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{sns}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{plt}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{)}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{heatmap}\PY{p}{(}
+    \PY{n}{confusion\PYZus{}matrix\PYZus{}np}\PY{p}{,}
+    \PY{n}{annot}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}      \PY{c+c1}{\PYZsh{} 在格子中顯示數字}
+    \PY{n}{fmt}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{d}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}         \PY{c+c1}{\PYZsh{} 將數字格式化為整數}
+    \PY{n}{cmap}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Blues}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}    \PY{c+c1}{\PYZsh{} 使用藍色系的色盤}
+    \PY{n}{xticklabels}\PY{o}{=}\PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}classes}\PY{p}{)}\PY{p}{,}
+    \PY{n}{yticklabels}\PY{o}{=}\PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}classes}\PY{p}{)}\PY{p}{,}
+\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Confusion Matrix Heatmap}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Predicted Label}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{True Label}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_64_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Step 4-2: 計算精確率 (Precision) 與召回率
+(Recall)}\label{step-4-2-ux8a08ux7b97ux7cbeux78baux7387-precision-ux8207ux53ecux56deux7387-recall}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 我們直接在 CuPy 陣列上進行計算}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}\PYZhy{} Performance Metrics per Class \PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}classes}\PY{p}{)}\PY{p}{:}
+    \PY{n}{true\PYZus{}positives} \PY{o}{=} \PY{n}{confusion\PYZus{}matrix\PYZus{}cp}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{i}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{} 該 Col 的總和 (所有被預測為 i 的) \PYZhy{} TP}
+    \PY{n}{false\PYZus{}positives} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{confusion\PYZus{}matrix\PYZus{}cp}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{i}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{true\PYZus{}positives}
+    \PY{c+c1}{\PYZsh{} 該 Row 的總和 (所有實際上是 i 的) \PYZhy{} TP}
+    \PY{n}{false\PYZus{}negatives} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{confusion\PYZus{}matrix\PYZus{}cp}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{p}{:}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{true\PYZus{}positives}
+
+    \PY{c+c1}{\PYZsh{} 計算 Precision 和 Recall}
+    \PY{n}{precision} \PY{o}{=} \PY{n}{true\PYZus{}positives} \PY{o}{/} \PY{p}{(}\PY{n}{true\PYZus{}positives} \PY{o}{+} \PY{n}{false\PYZus{}positives}\PY{p}{)}
+    \PY{n}{recall} \PY{o}{=} \PY{n}{true\PYZus{}positives} \PY{o}{/} \PY{p}{(}\PY{n}{true\PYZus{}positives} \PY{o}{+} \PY{n}{false\PYZus{}negatives}\PY{p}{)}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{數字 }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{i}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} 使用 .asnumpy() 以便格式化輸出}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  精確率 (Precision): }\PY{l+s+si}{\PYZob{}}\PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{precision}\PY{p}{)}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  召回率 (Recall):    }\PY{l+s+si}{\PYZob{}}\PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{recall}\PY{p}{)}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+--- Performance Metrics per Class ---
+數字 '0':
+  精確率 (Precision): 0.9868
+  召回率 (Recall):    0.9918
+數字 '1':
+  精確率 (Precision): 0.9956
+  召回率 (Recall):    0.9947
+數字 '2':
+  精確率 (Precision): 0.9855
+  召回率 (Recall):    0.9874
+數字 '3':
+  精確率 (Precision): 0.9833
+  召回率 (Recall):    0.9921
+數字 '4':
+  精確率 (Precision): 0.9857
+  召回率 (Recall):    0.9796
+數字 '5':
+  精確率 (Precision): 0.9854
+  召回率 (Recall):    0.9865
+數字 '6':
+  精確率 (Precision): 0.9854
+  召回率 (Recall):    0.9854
+數字 '7':
+  精確率 (Precision): 0.9825
+  召回率 (Recall):    0.9854
+數字 '8':
+  精確率 (Precision): 0.9906
+  召回率 (Recall):    0.9764
+數字 '9':
+  精確率 (Precision): 0.9782
+  召回率 (Recall):    0.9792
+    \end{Verbatim}
+
+    \subsection{Step 4-3:
+繪制曲線圖}\label{step-4-3-ux7e6aux5236ux66f2ux7ddaux5716}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 將 CuPy 陣列轉為 NumPy 陣列}
+\PY{c+c1}{\PYZsh{} 1. 從 history 中取出資料}
+\PY{n}{costs\PYZus{}cp} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{history}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{costs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{accuracies\PYZus{}cp} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{history}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{accuracies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 2. 使用 asnumpy() 轉換}
+\PY{n}{costs\PYZus{}np} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{costs\PYZus{}cp}\PY{p}{)}
+\PY{n}{accuracies\PYZus{}np} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{accuracies\PYZus{}cp}\PY{p}{)}
+
+
+\PY{c+c1}{\PYZsh{} 開始繪圖}
+\PY{c+c1}{\PYZsh{} 建立一個 1x2 的子圖畫布，方便同時顯示兩張圖}
+\PY{n}{fig}\PY{p}{,} \PY{p}{(}\PY{n}{ax1}\PY{p}{,} \PY{n}{ax2}\PY{p}{)} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 設定一個主標題}
+\PY{n}{fig}\PY{o}{.}\PY{n}{suptitle}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CNN Model Learning Curves}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 圖一：損失 (Loss) vs. 世代 (Epochs)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{costs\PYZus{}np}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Training Loss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Loss vs. Epochs}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Epoch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Loss}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 圖二：準確率 (Accuracy) vs. 世代 (Epochs)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{accuracies\PYZus{}np}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Test Accuracy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy vs. Epochs}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Epoch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 顯示圖表}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_68_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Step 4-4: 加分：視覺化卷積核 (Visualize
+Filters)}\label{step-4-4-ux52a0ux5206ux8996ux89baux5316ux5377ux7a4dux6838-visualize-filters}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{trained\PYZus{}parameters} \PY{o}{=} \PY{n}{load\PYZus{}parameters}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{my\PYZus{}cnn\PYZus{}model.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{assert} \PY{n}{trained\PYZus{}parameters} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None}
+\PY{k}{if} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{trained\PYZus{}parameters}\PY{l+s+s1}{\PYZsq{}} \PY{o+ow}{in} \PY{n+nb}{locals}\PY{p}{(}\PY{p}{)} \PY{o+ow}{or} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{trained\PYZus{}parameters}\PY{l+s+s1}{\PYZsq{}} \PY{o+ow}{in} \PY{n+nb}{globals}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{讀取已訓練的 MNIST 模型權重...}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 1. 從權重字典中取出第一個卷積層的權重 (W\PYZus{}conv)}
+    \PY{c+c1}{\PYZsh{} 它的 shape 是 (n\PYZus{}filters, C\PYZus{}in, f, f)，在此為 (32, 1, 3, 3)}
+    \PY{n}{W\PYZus{}conv\PYZus{}cp} \PY{o}{=} \PY{n}{trained\PYZus{}parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} 2. 將 CuPy 陣列移至 CPU 並轉為 NumPy 陣列，以便 Matplotlib 處理}
+    \PY{n}{W\PYZus{}conv\PYZus{}np} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{W\PYZus{}conv\PYZus{}cp}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 3. 設定視覺化圖表}
+    \PY{c+c1}{\PYZsh{} 我們有 32 個 filters，可以用一個 4x8 的網格來顯示}
+    \PY{n}{num\PYZus{}filters} \PY{o}{=} \PY{n}{W\PYZus{}conv\PYZus{}np}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    \PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 設定主標題}
+    \PY{n}{fig}\PY{o}{.}\PY{n}{suptitle}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of Learned Convolutional Filters (MNIST Model)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 4. 遍歷所有 filters 並在子圖中繪製}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{ax} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{axes}\PY{o}{.}\PY{n}{flat}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} 檢查是否還有 filter 可以顯示}
+        \PY{k}{if} \PY{n}{i} \PY{o}{\PYZlt{}} \PY{n}{num\PYZus{}filters}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} 取出第 i 個 filter 的權重。}
+            \PY{c+c1}{\PYZsh{} 由於 MNIST 是灰階，輸入頻道只有 1，所以我們用 [i, 0, :, :]}
+            \PY{n}{filt} \PY{o}{=} \PY{n}{W\PYZus{}conv\PYZus{}np}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+
+            \PY{c+c1}{\PYZsh{} 使用 imshow 繪製 filter，\PYZsq{}gray\PYZsq{} 色彩映射適合顯示權重}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{filt}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 隱藏座標軸刻度，讓圖表更簡潔}
+        \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xticks}\PY{p}{(}\PY{p}{[}\PY{p}{]}\PY{p}{)}
+        \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{p}{[}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 調整子圖之間的間距}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} 顯示圖表}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+
+\PY{k}{else}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{錯誤：找不到 }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{trained\PYZus{}parameters}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{。請先確定您已成功訓練並載入 MNIST 模型。}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Loading parameters from my\_cnn\_model.npz{\ldots}
+Parameters loaded successfully.
+讀取已訓練的 MNIST 模型權重{\ldots}
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_70_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \section{Bonus: CIFAR-10}\label{bonus-cifar-10}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{gc} \PY{c+c1}{\PYZsh{} 引入垃圾回收模組}
+
+\PY{c+c1}{\PYZsh{} 刪除所有不再需要的 MNIST 變數}
+\PY{n}{mnist\PYZus{}vars\PYZus{}to\PYZus{}delete} \PY{o}{=} \PY{p}{[}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{train\PYZus{}x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{train\PYZus{}y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{train\PYZus{}x\PYZus{}orig}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{train\PYZus{}y\PYZus{}orig}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{test\PYZus{}x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{test\PYZus{}y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{test\PYZus{}x\PYZus{}orig}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{test\PYZus{}y\PYZus{}orig}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{trained\PYZus{}parameters}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{test\PYZus{}predictions}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{confusion\PYZus{}matrix\PYZus{}cp}\PY{l+s+s1}{\PYZsq{}}
+\PY{p}{]}
+
+\PY{k}{for} \PY{n}{var\PYZus{}name} \PY{o+ow}{in} \PY{n}{mnist\PYZus{}vars\PYZus{}to\PYZus{}delete}\PY{p}{:}
+    \PY{k}{if} \PY{n}{var\PYZus{}name} \PY{o+ow}{in} \PY{n+nb}{locals}\PY{p}{(}\PY{p}{)} \PY{o+ow}{or} \PY{n}{var\PYZus{}name} \PY{o+ow}{in} \PY{n+nb}{globals}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+        \PY{k}{del} \PY{n+nb}{globals}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{n}{var\PYZus{}name}\PY{p}{]}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{變數 }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{var\PYZus{}name}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ 已刪除。}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 強制進行垃圾回收}
+\PY{n}{gc}\PY{o}{.}\PY{n}{collect}\PY{p}{(}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 清空 CuPy 的記憶體池}
+\PY{n}{mempool} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{get\PYZus{}default\PYZus{}memory\PYZus{}pool}\PY{p}{(}\PY{p}{)}
+\PY{n}{mempool}\PY{o}{.}\PY{n}{free\PYZus{}all\PYZus{}blocks}\PY{p}{(}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{CuPy 記憶體池已清空。}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{目前 VRAM 已分配 (Used Bytes): }\PY{l+s+si}{\PYZob{}}\PY{n}{mempool}\PY{o}{.}\PY{n}{used\PYZus{}bytes}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ bytes}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{目前 VRAM 總量 (Total Bytes): }\PY{l+s+si}{\PYZob{}}\PY{n}{mempool}\PY{o}{.}\PY{n}{total\PYZus{}bytes}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ bytes}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+變數 'train\_x' 已刪除。
+變數 'train\_y' 已刪除。
+變數 'train\_x\_orig' 已刪除。
+變數 'train\_y\_orig' 已刪除。
+變數 'test\_x' 已刪除。
+變數 'test\_y' 已刪除。
+變數 'test\_x\_orig' 已刪除。
+變數 'test\_y\_orig' 已刪除。
+變數 'trained\_parameters' 已刪除。
+變數 'test\_predictions' 已刪除。
+變數 'confusion\_matrix\_cp' 已刪除。
+
+CuPy 記憶體池已清空。
+目前 VRAM 已分配 (Used Bytes): 1670149120 bytes
+目前 VRAM 總量 (Total Bytes): 3036867584 bytes
+    \end{Verbatim}
+
+    \subsection{Bonus Step 1: 下載並加載
+CIFAR-10}\label{bonus-step-1-ux4e0bux8f09ux4e26ux52a0ux8f09-cifar-10}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{!}wget\PY{+w}{ }https://www.cs.toronto.edu/\PYZti{}kriz/cifar\PYZhy{}10\PYZhy{}python.tar.gz
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+--2025-06-21 15:19:58--  https://www.cs.toronto.edu/\textasciitilde{}kriz/cifar-10-python.tar.gz
+Resolving www.cs.toronto.edu (www.cs.toronto.edu){\ldots} 128.100.3.30
+Connecting to www.cs.toronto.edu (www.cs.toronto.edu)|128.100.3.30|:443{\ldots}
+connected.
+HTTP request sent, awaiting response{\ldots} 200 OK
+Length: 170498071 (163M) [application/x-gzip]
+Saving to: ‘cifar-10-python.tar.gz’
+
+cifar-10-python.tar 100\%[===================>] 162.60M  1.05MB/s    in 2m 53s
+
+2025-06-21 15:22:53 (961 KB/s) - ‘cifar-10-python.tar.gz’ saved
+[170498071/170498071]
+
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{!}tar\PY{+w}{ }zxvf\PY{+w}{ }cifar\PYZhy{}10\PYZhy{}python.tar.gz
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+cifar-10-batches-py/
+cifar-10-batches-py/data\_batch\_4
+cifar-10-batches-py/readme.html
+cifar-10-batches-py/test\_batch
+cifar-10-batches-py/data\_batch\_3
+cifar-10-batches-py/batches.meta
+cifar-10-batches-py/data\_batch\_2
+cifar-10-batches-py/data\_batch\_5
+cifar-10-batches-py/data\_batch\_1
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{pickle}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{os}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def}\PY{+w}{ }\PY{n+nf}{load\PYZus{}cifa10}\PY{p}{(}\PY{n}{root}\PY{p}{)}\PY{p}{:}
+  \PY{k}{def}\PY{+w}{ }\PY{n+nf}{load\PYZus{}batch}\PY{p}{(}\PY{n}{filename}\PY{p}{)}\PY{p}{:}
+      \PY{k}{with} \PY{n+nb}{open}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{n}{filename}\PY{p}{)}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rb}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{k}{as} \PY{n}{f}\PY{p}{:}
+          \PY{c+c1}{\PYZsh{} 使用 latin1 編碼來讀取 Python 2 生成的 pickle 檔案}
+          \PY{n}{datadict} \PY{o}{=} \PY{n}{pickle}\PY{o}{.}\PY{n}{load}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{encoding}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latin1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{X} \PY{o}{=} \PY{n}{datadict}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{data}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+          \PY{n}{Y} \PY{o}{=} \PY{n}{datadict}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{labels}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+          \PY{c+c1}{\PYZsh{} 將資料塑形為 (樣本數, 色彩頻道, 高度, 寬度)}
+          \PY{c+c1}{\PYZsh{} 原始資料格式為 (N, 3072)，其中 3072 = 3 * 32 * 32}
+          \PY{c+c1}{\PYZsh{} 儲存順序是 RRR...GGG...BBB...}
+          \PY{n}{X} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{l+m+mi}{10000}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{32}\PY{p}{,} \PY{l+m+mi}{32}\PY{p}{)}
+          \PY{n}{Y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{Y}\PY{p}{)}
+          \PY{k}{return} \PY{n}{X}\PY{p}{,} \PY{n}{Y}
+
+  \PY{c+c1}{\PYZsh{} 載入訓練資料 (共 5 個 batch)}
+  \PY{n}{xs}\PY{p}{,} \PY{n}{ys} \PY{o}{=} \PY{p}{[}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{p}{]}
+  \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{:}
+      \PY{n}{x}\PY{p}{,} \PY{n}{y} \PY{o}{=} \PY{n}{load\PYZus{}batch}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{data\PYZus{}batch\PYZus{}}\PY{l+s+si}{\PYZob{}}\PY{n}{i}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+      \PY{n}{xs}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+      \PY{n}{ys}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+
+  \PY{n}{train\PYZus{}x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{xs}\PY{p}{)}
+  \PY{n}{train\PYZus{}y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{ys}\PY{p}{)}
+
+  \PY{c+c1}{\PYZsh{} 載入測試資料}
+  \PY{n}{test\PYZus{}x}\PY{p}{,} \PY{n}{test\PYZus{}y} \PY{o}{=} \PY{n}{load\PYZus{}batch}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}batch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+  \PY{c+c1}{\PYZsh{} 載入類別名稱}
+  \PY{k}{with} \PY{n+nb}{open}\PY{p}{(}\PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{batches.meta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rb}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{k}{as} \PY{n}{f}\PY{p}{:}
+      \PY{n}{meta} \PY{o}{=} \PY{n}{pickle}\PY{o}{.}\PY{n}{load}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{encoding}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latin1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+      \PY{n}{class\PYZus{}names} \PY{o}{=} \PY{n}{meta}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{label\PYZus{}names}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+  \PY{k}{return} \PY{n}{train\PYZus{}x}\PY{p}{,} \PY{n}{train\PYZus{}y}\PY{p}{,} \PY{n}{test\PYZus{}x}\PY{p}{,} \PY{n}{test\PYZus{}y}\PY{p}{,} \PY{n}{class\PYZus{}names}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cifar10\PYZus{}train\PYZus{}x\PYZus{}np}\PY{p}{,} \PY{n}{cifar10\PYZus{}train\PYZus{}y\PYZus{}np}\PY{p}{,} \PY{n}{cifar10\PYZus{}test\PYZus{}x\PYZus{}np}\PY{p}{,} \PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}np}\PY{p}{,} \PY{n}{cifar10\PYZus{}class\PYZus{}names} \PY{o}{=} \PY{n}{load\PYZus{}cifa10}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{cifar\PYZhy{}10\PYZhy{}batches\PYZhy{}py}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZhy{}\PYZhy{}\PYZhy{} CIFAR\PYZhy{}10 資料維度 (NumPy) \PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{訓練資料 X:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}train\PYZus{}x\PYZus{}np}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{訓練標籤 Y:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}train\PYZus{}y\PYZus{}np}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{測試資料 X:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}test\PYZus{}x\PYZus{}np}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{測試標籤 Y:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}np}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{類別名稱:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}class\PYZus{}names}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+--- CIFAR-10 資料維度 (NumPy) ---
+訓練資料 X: (50000, 3, 32, 32)
+訓練標籤 Y: (50000,)
+測試資料 X: (10000, 3, 32, 32)
+測試標籤 Y: (10000,)
+類別名稱: ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse',
+'ship', 'truck']
+    \end{Verbatim}
+
+    \subsection{Bonus Step 2: 轉為
+CuPy}\label{bonus-step-2-ux8f49ux70ba-cupy}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 將 NumPy 陣列轉換為 CuPy 陣列}
+\PY{n}{cifar10\PYZus{}train\PYZus{}x\PYZus{}orig} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{cifar10\PYZus{}train\PYZus{}x\PYZus{}np}\PY{p}{)}
+\PY{n}{cifar10\PYZus{}train\PYZus{}y\PYZus{}orig} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{cifar10\PYZus{}train\PYZus{}y\PYZus{}np}\PY{p}{)}
+\PY{n}{cifar10\PYZus{}test\PYZus{}x\PYZus{}orig} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{cifar10\PYZus{}test\PYZus{}x\PYZus{}np}\PY{p}{)}
+\PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}orig} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}np}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} 正規化 (Normalize) \PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{c+c1}{\PYZsh{} 將像素值從 0\PYZhy{}255 正規化到 0\PYZhy{}1 之間}
+\PY{n}{cifar10\PYZus{}train\PYZus{}x} \PY{o}{=} \PY{n}{cifar10\PYZus{}train\PYZus{}x\PYZus{}orig} \PY{o}{/} \PY{l+m+mf}{255.0}
+\PY{n}{cifar10\PYZus{}test\PYZus{}x} \PY{o}{=} \PY{n}{cifar10\PYZus{}test\PYZus{}x\PYZus{}orig} \PY{o}{/} \PY{l+m+mf}{255.0}
+
+\PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} 對 Label 進行 One\PYZhy{}Hot Encode \PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{n}{num\PYZus{}classes\PYZus{}cifar10} \PY{o}{=} \PY{l+m+mi}{10}
+\PY{n}{cifar10\PYZus{}train\PYZus{}y} \PY{o}{=} \PY{n}{one\PYZus{}hot\PYZus{}encode}\PY{p}{(}\PY{n}{cifar10\PYZus{}train\PYZus{}y\PYZus{}orig}\PY{p}{,} \PY{n}{num\PYZus{}classes\PYZus{}cifar10}\PY{p}{)}
+\PY{n}{cifar10\PYZus{}test\PYZus{}y} \PY{o}{=} \PY{n}{one\PYZus{}hot\PYZus{}encode}\PY{p}{(}\PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}orig}\PY{p}{,} \PY{n}{num\PYZus{}classes\PYZus{}cifar10}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZhy{}\PYZhy{}\PYZhy{} CIFAR\PYZhy{}10 資料維度 (CuPy) \PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{train\PYZus{}x shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}train\PYZus{}x}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{train\PYZus{}y shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}train\PYZus{}y}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}x shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}test\PYZus{}x}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}y shape:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cifar10\PYZus{}test\PYZus{}y}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Data type:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n+nb}{type}\PY{p}{(}\PY{n}{cifar10\PYZus{}train\PYZus{}x}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+--- CIFAR-10 資料維度 (CuPy) ---
+train\_x shape: (50000, 3, 32, 32)
+train\_y shape: (50000, 10)
+test\_x shape: (10000, 3, 32, 32)
+test\_y shape: (10000, 10)
+Data type: <class 'cupy.ndarray'>
+    \end{Verbatim}
+
+    \subsection{Bonus Step 3: 訓練}\label{bonus-step-3-ux8a13ux7df4}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 設定 hyperparameters}
+\PY{n}{LEARNING\PYZus{}RATE\PYZus{}CIFAR} \PY{o}{=} \PY{l+m+mf}{0.05}
+\PY{n}{NUM\PYZus{}EPOCHS\PYZus{}CIFAR} \PY{o}{=} \PY{l+m+mi}{150} \PY{c+c1}{\PYZsh{} 增加 Epoch 上限}
+\PY{n}{BATCH\PYZus{}SIZE\PYZus{}CIFAR} \PY{o}{=} \PY{l+m+mi}{128}
+\PY{n}{N\PYZus{}FILTERS\PYZus{}CIFAR} \PY{o}{=} \PY{l+m+mi}{32} \PY{c+c1}{\PYZsh{} 增加 filter 數量以捕捉更複雜的特徵}
+\PY{n}{FILTER\PYZus{}SIZE\PYZus{}CIFAR} \PY{o}{=} \PY{l+m+mi}{3}
+\PY{n}{PATIENCE\PYZus{}CIFAR} \PY{o}{=} \PY{l+m+mi}{15}
+
+\PY{c+c1}{\PYZsh{} 開始訓練}
+\PY{n}{cifar10\PYZus{}params}\PY{p}{,} \PY{n}{cifar10\PYZus{}history} \PY{o}{=} \PY{n}{cnn\PYZus{}model}\PY{p}{(}
+    \PY{n}{cifar10\PYZus{}train\PYZus{}x}\PY{p}{,} \PY{n}{cifar10\PYZus{}train\PYZus{}y}\PY{p}{,} \PY{n}{cifar10\PYZus{}train\PYZus{}y\PYZus{}orig}\PY{p}{,}
+    \PY{n}{cifar10\PYZus{}test\PYZus{}x}\PY{p}{,} \PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}orig}\PY{p}{,}
+    \PY{n}{learning\PYZus{}rate}\PY{o}{=}\PY{n}{LEARNING\PYZus{}RATE\PYZus{}CIFAR}\PY{p}{,}
+    \PY{n}{num\PYZus{}epochs}\PY{o}{=}\PY{n}{NUM\PYZus{}EPOCHS\PYZus{}CIFAR}\PY{p}{,}
+    \PY{n}{batch\PYZus{}size}\PY{o}{=}\PY{n}{BATCH\PYZus{}SIZE\PYZus{}CIFAR}\PY{p}{,}
+    \PY{n}{n\PYZus{}filters}\PY{o}{=}\PY{n}{N\PYZus{}FILTERS\PYZus{}CIFAR}\PY{p}{,}
+    \PY{n}{filter\PYZus{}size}\PY{o}{=}\PY{n}{FILTER\PYZus{}SIZE\PYZus{}CIFAR}\PY{p}{,}
+    \PY{n}{use\PYZus{}early\PYZus{}stopping}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}
+    \PY{n}{early\PYZus{}stopping\PYZus{}patience}\PY{o}{=}\PY{n}{PATIENCE\PYZus{}CIFAR}
+\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 儲存訓練好的 CIFAR\PYZhy{}10 模型權重}
+\PY{n}{save\PYZus{}parameters}\PY{p}{(}\PY{n}{cifar10\PYZus{}params}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{my\PYZus{}cifar10\PYZus{}cnn\PYZus{}model.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Epoch 1/150 - Cost: 2.072176 - Accuracy: 0.3469 - Time: 10.08s
+  -> Accuracy improved to 0.3469! Saving model.
+Epoch 2/150 - Cost: 1.753204 - Accuracy: 0.4441 - Time: 9.98s
+  -> Accuracy improved to 0.4441! Saving model.
+Epoch 3/150 - Cost: 1.541613 - Accuracy: 0.4770 - Time: 9.69s
+  -> Accuracy improved to 0.4770! Saving model.
+Epoch 4/150 - Cost: 1.422470 - Accuracy: 0.5105 - Time: 9.27s
+  -> Accuracy improved to 0.5105! Saving model.
+Epoch 5/150 - Cost: 1.330337 - Accuracy: 0.5092 - Time: 9.34s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 6/150 - Cost: 1.248691 - Accuracy: 0.5237 - Time: 9.18s
+  -> Accuracy improved to 0.5237! Saving model.
+Epoch 7/150 - Cost: 1.158501 - Accuracy: 0.5591 - Time: 9.20s
+  -> Accuracy improved to 0.5591! Saving model.
+Epoch 8/150 - Cost: 1.072573 - Accuracy: 0.5901 - Time: 9.22s
+  -> Accuracy improved to 0.5901! Saving model.
+Epoch 9/150 - Cost: 1.013198 - Accuracy: 0.5719 - Time: 9.25s
+  -> Accuracy did not improve for 1 epoch(s).
+Epoch 10/150 - Cost: 0.944731 - Accuracy: 0.5490 - Time: 9.27s
+  -> Accuracy did not improve for 2 epoch(s).
+Epoch 11/150 - Cost: 0.883016 - Accuracy: 0.5827 - Time: 9.27s
+  -> Accuracy did not improve for 3 epoch(s).
+Epoch 12/150 - Cost: 0.830277 - Accuracy: 0.5769 - Time: 9.28s
+  -> Accuracy did not improve for 4 epoch(s).
+Epoch 13/150 - Cost: 0.776206 - Accuracy: 0.5644 - Time: 9.26s
+  -> Accuracy did not improve for 5 epoch(s).
+Epoch 14/150 - Cost: 0.728672 - Accuracy: 0.5807 - Time: 9.26s
+  -> Accuracy did not improve for 6 epoch(s).
+Epoch 15/150 - Cost: 0.684573 - Accuracy: 0.5901 - Time: 9.24s
+  -> Accuracy did not improve for 7 epoch(s).
+Epoch 16/150 - Cost: 0.624721 - Accuracy: 0.5801 - Time: 9.23s
+  -> Accuracy did not improve for 8 epoch(s).
+Epoch 17/150 - Cost: 0.587469 - Accuracy: 0.5757 - Time: 9.23s
+  -> Accuracy did not improve for 9 epoch(s).
+Epoch 18/150 - Cost: 0.542030 - Accuracy: 0.5882 - Time: 9.25s
+  -> Accuracy did not improve for 10 epoch(s).
+Epoch 19/150 - Cost: 0.508496 - Accuracy: 0.5852 - Time: 9.34s
+  -> Accuracy did not improve for 11 epoch(s).
+Epoch 20/150 - Cost: 0.482322 - Accuracy: 0.5689 - Time: 9.25s
+  -> Accuracy did not improve for 12 epoch(s).
+Epoch 21/150 - Cost: 0.442902 - Accuracy: 0.5829 - Time: 9.27s
+  -> Accuracy did not improve for 13 epoch(s).
+Epoch 22/150 - Cost: 0.412536 - Accuracy: 0.5788 - Time: 9.26s
+  -> Accuracy did not improve for 14 epoch(s).
+Epoch 23/150 - Cost: 0.372546 - Accuracy: 0.5764 - Time: 10.03s
+  -> Accuracy did not improve for 15 epoch(s).
+
+Early stopping triggered after 15 epochs with no improvement.
+Saving parameters to my\_cifar10\_cnn\_model.npz{\ldots}
+Parameters saved successfully.
+    \end{Verbatim}
+
+    \subsection{Bonus Step 4:
+效能評估}\label{bonus-step-4-ux6548ux80fdux8a55ux4f30}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cifar10\PYZus{}trained\PYZus{}parameters} \PY{o}{=} \PY{n}{load\PYZus{}parameters}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{my\PYZus{}cifar10\PYZus{}cnn\PYZus{}model.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Loading parameters from my\_cifar10\_cnn\_model.npz{\ldots}
+Parameters loaded successfully.
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 1. 進行最終預測}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{在 CIFAR\PYZhy{}10 測試集上進行最終預測}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{cifar10\PYZus{}test\PYZus{}predictions} \PY{o}{=} \PY{n}{predict}\PY{p}{(}\PY{n}{cifar10\PYZus{}test\PYZus{}x}\PY{p}{,} \PY{n}{cifar10\PYZus{}trained\PYZus{}parameters}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 2. 確認最終準確率}
+\PY{n}{final\PYZus{}accuracy\PYZus{}cifar10} \PY{o}{=} \PY{n}{calculate\PYZus{}accuracy}\PY{p}{(}\PY{n}{cifar10\PYZus{}test\PYZus{}predictions}\PY{p}{,} \PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}orig}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CIFAR\PYZhy{}10 模型最終準確率: }\PY{l+s+si}{\PYZob{}}\PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{final\PYZus{}accuracy\PYZus{}cifar10}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{100}\PY{l+s+si}{:}\PY{l+s+s2}{.2f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+在 CIFAR-10 測試集上進行最終預測
+CIFAR-10 模型最終準確率: 59.01\%
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 3. 建立混淆矩陣}
+\PY{n}{confusion\PYZus{}matrix\PYZus{}cifar10\PYZus{}cp} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{num\PYZus{}classes\PYZus{}cifar10}\PY{p}{,} \PY{n}{num\PYZus{}classes\PYZus{}cifar10}\PY{p}{)}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n+nb}{int}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}orig}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n}{true\PYZus{}label} \PY{o}{=} \PY{n}{cifar10\PYZus{}test\PYZus{}y\PYZus{}orig}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{predicted\PYZus{}label} \PY{o}{=} \PY{n}{cifar10\PYZus{}test\PYZus{}predictions}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+    \PY{n}{confusion\PYZus{}matrix\PYZus{}cifar10\PYZus{}cp}\PY{p}{[}\PY{n}{true\PYZus{}label}\PY{p}{,} \PY{n}{predicted\PYZus{}label}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+\PY{c+c1}{\PYZsh{} 4. 視覺化混淆矩陣 (使用類別名稱)}
+\PY{n}{confusion\PYZus{}matrix\PYZus{}cifar10\PYZus{}np} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{confusion\PYZus{}matrix\PYZus{}cifar10\PYZus{}cp}\PY{p}{)}
+
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{seaborn}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{sns}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{plt}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{heatmap}\PY{p}{(}
+    \PY{n}{confusion\PYZus{}matrix\PYZus{}cifar10\PYZus{}np}\PY{p}{,}
+    \PY{n}{annot}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}
+    \PY{n}{fmt}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{d}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{cmap}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Blues}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{xticklabels}\PY{o}{=}\PY{n}{cifar10\PYZus{}class\PYZus{}names}\PY{p}{,}
+    \PY{n}{yticklabels}\PY{o}{=}\PY{n}{cifar10\PYZus{}class\PYZus{}names}\PY{p}{,}
+\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CIFAR\PYZhy{}10 Confusion Matrix Heatmap}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Predicted Label}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{True Label}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_86_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 5. 計算精確率與召回率}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZhy{}\PYZhy{}\PYZhy{} CIFAR\PYZhy{}10 各類別的性能指標 \PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}classes\PYZus{}cifar10}\PY{p}{)}\PY{p}{:}
+    \PY{n}{true\PYZus{}positives} \PY{o}{=} \PY{n}{confusion\PYZus{}matrix\PYZus{}cifar10\PYZus{}cp}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{i}\PY{p}{]}
+    \PY{n}{false\PYZus{}positives} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{confusion\PYZus{}matrix\PYZus{}cifar10\PYZus{}cp}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{i}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{true\PYZus{}positives}
+    \PY{n}{false\PYZus{}negatives} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{confusion\PYZus{}matrix\PYZus{}cifar10\PYZus{}cp}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{p}{:}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{true\PYZus{}positives}
+
+    \PY{n}{precision} \PY{o}{=} \PY{n}{true\PYZus{}positives} \PY{o}{/} \PY{p}{(}\PY{n}{true\PYZus{}positives} \PY{o}{+} \PY{n}{false\PYZus{}positives} \PY{o}{+} \PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{)} \PY{c+c1}{\PYZsh{} 避免除以零}
+    \PY{n}{recall} \PY{o}{=} \PY{n}{true\PYZus{}positives} \PY{o}{/} \PY{p}{(}\PY{n}{true\PYZus{}positives} \PY{o}{+} \PY{n}{false\PYZus{}negatives} \PY{o}{+} \PY{l+m+mf}{1e\PYZhy{}9}\PY{p}{)}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{類別 }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{cifar10\PYZus{}class\PYZus{}names}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  精確率 (Precision): }\PY{l+s+si}{\PYZob{}}\PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{precision}\PY{p}{)}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  召回率 (Recall):    }\PY{l+s+si}{\PYZob{}}\PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{recall}\PY{p}{)}\PY{l+s+si}{:}\PY{l+s+s2}{.4f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+--- CIFAR-10 各類別的性能指標 ---
+類別 'airplane':
+  精確率 (Precision): 0.6383
+  召回率 (Recall):    0.6440
+類別 'automobile':
+  精確率 (Precision): 0.7225
+  召回率 (Recall):    0.6950
+類別 'bird':
+  精確率 (Precision): 0.5250
+  召回率 (Recall):    0.4200
+類別 'cat':
+  精確率 (Precision): 0.4277
+  召回率 (Recall):    0.3430
+類別 'deer':
+  精確率 (Precision): 0.5254
+  召回率 (Recall):    0.4870
+類別 'dog':
+  精確率 (Precision): 0.4930
+  召回率 (Recall):    0.5280
+類別 'frog':
+  精確率 (Precision): 0.5737
+  召回率 (Recall):    0.6770
+類別 'horse':
+  精確率 (Precision): 0.6308
+  召回率 (Recall):    0.6850
+類別 'ship':
+  精確率 (Precision): 0.6854
+  召回率 (Recall):    0.7430
+類別 'truck':
+  精確率 (Precision): 0.6293
+  召回率 (Recall):    0.6790
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} 6. 繪製學習曲線}
+\PY{n}{costs\PYZus{}cifar10\PYZus{}cp} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{cifar10\PYZus{}history}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{costs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{accuracies\PYZus{}cifar10\PYZus{}cp} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{cifar10\PYZus{}history}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{accuracies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{costs\PYZus{}cifar10\PYZus{}np} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{costs\PYZus{}cifar10\PYZus{}cp}\PY{p}{)}
+\PY{n}{accuracies\PYZus{}cifar10\PYZus{}np} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{accuracies\PYZus{}cifar10\PYZus{}cp}\PY{p}{)}
+
+\PY{n}{fig}\PY{p}{,} \PY{p}{(}\PY{n}{ax1}\PY{p}{,} \PY{n}{ax2}\PY{p}{)} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\PY{n}{fig}\PY{o}{.}\PY{n}{suptitle}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CIFAR\PYZhy{}10 Model Learning Curves}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)}
+
+\PY{n}{ax1}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{costs\PYZus{}cifar10\PYZus{}np}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Training Loss}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Loss vs. Epochs}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Epoch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Loss}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{ax1}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{ax2}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{accuracies\PYZus{}cifar10\PYZus{}np}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Test Accuracy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy vs. Epochs}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Epoch}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{ax2}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_88_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Bonus Step 5:
+加分題：視覺化卷積核}\label{bonus-step-5-ux52a0ux5206ux984cux8996ux89baux5316ux5377ux7a4dux6838}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{numpy}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{np}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{cupy}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{cp}
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{trained\PYZus{}parameters} \PY{o}{=} \PY{n}{load\PYZus{}parameters}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{my\PYZus{}cifar10\PYZus{}cnn\PYZus{}model.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{assert} \PY{n}{trained\PYZus{}parameters} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None}
+\PY{k}{if} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{trained\PYZus{}parameters}\PY{l+s+s1}{\PYZsq{}} \PY{o+ow}{in} \PY{n+nb}{locals}\PY{p}{(}\PY{p}{)} \PY{o+ow}{or} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{trained\PYZus{}parameters}\PY{l+s+s1}{\PYZsq{}} \PY{o+ow}{in} \PY{n+nb}{globals}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{讀取已訓練的 CIFAR\PYZhy{}10 模型權重...}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 1. 從權重字典中取出第一個卷積層的權重 (W\PYZus{}conv)}
+    \PY{n}{W\PYZus{}conv\PYZus{}cp} \PY{o}{=} \PY{n}{trained\PYZus{}parameters}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{W\PYZus{}conv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} 2. 將 CuPy 陣列移至 CPU 並轉為 NumPy 陣列，以便 Matplotlib 處理}
+    \PY{n}{W\PYZus{}conv\PYZus{}np} \PY{o}{=} \PY{n}{cp}\PY{o}{.}\PY{n}{asnumpy}\PY{p}{(}\PY{n}{W\PYZus{}conv\PYZus{}cp}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 3. 設定視覺化圖表}
+    \PY{c+c1}{\PYZsh{} 我們有 32 個 filters，可以用一個 4x8 的網格來顯示}
+    \PY{n}{num\PYZus{}filters} \PY{o}{=} \PY{n}{W\PYZus{}conv\PYZus{}np}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    \PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 設定主標題}
+    \PY{n}{fig}\PY{o}{.}\PY{n}{suptitle}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of Learned Convolutional Filters (CIFAR\PYZhy{}10)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 4. 遍歷所有 filters 並在子圖中繪製}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{ax} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{axes}\PY{o}{.}\PY{n}{flat}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} 檢查是否還有 filter 可以顯示}
+        \PY{k}{if} \PY{n}{i} \PY{o}{\PYZlt{}} \PY{n}{num\PYZus{}filters}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} 取出第 i 個 filter 的權重。}
+            \PY{n}{filt} \PY{o}{=} \PY{n}{W\PYZus{}conv\PYZus{}np}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{p}{]}
+
+            \PY{n}{f\PYZus{}min}\PY{p}{,} \PY{n}{f\PYZus{}max} \PY{o}{=} \PY{n}{filt}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{filt}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{p}{)}
+            \PY{n}{filt\PYZus{}normalized} \PY{o}{=} \PY{p}{(}\PY{n}{filt} \PY{o}{\PYZhy{}} \PY{n}{f\PYZus{}min}\PY{p}{)} \PY{o}{/} \PY{p}{(}\PY{n}{f\PYZus{}max} \PY{o}{\PYZhy{}} \PY{n}{f\PYZus{}min}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} 轉置維度從 (C, H, W) 到 (H, W, C) 以符合 imshow 的格式}
+            \PY{n}{filt\PYZus{}rgb} \PY{o}{=} \PY{n}{filt\PYZus{}normalized}\PY{o}{.}\PY{n}{transpose}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} 使用 imshow 繪製 filter}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{filt\PYZus{}rgb}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} 隱藏座標軸刻度，讓圖表更簡潔}
+        \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xticks}\PY{p}{(}\PY{p}{[}\PY{p}{]}\PY{p}{)}
+        \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}yticks}\PY{p}{(}\PY{p}{[}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 調整子圖之間的間距}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} 顯示圖表}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+
+\PY{k}{else}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{錯誤：找不到 }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{trained\PYZus{}parameters}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{。請先確定您已成功訓練並載入 MNIST 模型。}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Loading parameters from my\_cifar10\_cnn\_model.npz{\ldots}
+Parameters loaded successfully.
+讀取已訓練的 CIFAR-10 模型權重{\ldots}
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_91_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \section{Conclusion}\label{conclusion}
+
+    本次作業成功地從零開始建構了一個功能完整的卷積神經網路，不僅達成了作業
+hw4.pdf 的所有基本要求，也完成了加分挑戰項目，從而驗證了對 CNN
+核心概念的深入理解 。
+
+在 MNIST 資料集上，模型表現出色，達到 98.60\%
+的高準確率。從學習曲線圖中可以看到，訓練損失穩定下降，而測試準確率則快速上升後趨於平穩，顯示模型有效地學習到了數字特徵。透過視覺化卷積核，可以觀察到模型在第一層學會了辨識數字的基礎筆劃，如邊緣、角落與線條等特徵。此外，提早停止（Early
+Stopping）機制的導入，成功地在模型性能達到巔峰時結束訓練，有效防止了過擬合。
+
+在 CIFAR-10 加分項目中，模型雖然能夠運作，但 59.01\% 的準確率遠低於
+MNIST 的成果。這符合預期，因為 CIFAR-10 是由更複雜的自然圖像組成
+，其特徵（如紋理、顏色、物體形狀）遠比 MNIST
+的單色筆劃複雜。本次實作的淺層 CNN
+結構對於捕捉如此複雜的特徵能力有限。儘管準確率不高，但成功將模型拓展至處理
+3
+通道的彩色圖像，並完成端到端的訓練與評估，本身即證明了模型的擴展性與彈性。
+
+總體而言，本次專案最大的收穫在於透過親手打造每一個環節，深刻體會了 CNN
+的數學原理與運作流程。從巢狀迴圈到 im2col
+的效能最佳化過程，也讓人理解到向量化運算在深度學習中的關鍵性。而 CuPy
+的使用，則展示了在不依賴高階框架的前提下，利用 GPU
+大幅提升訓練效率的可行性。
+
+    
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

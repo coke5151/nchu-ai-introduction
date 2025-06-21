@@ -1,7 +1,7 @@
 {
-    "InputFile":"files/hw3.tex",
-    "OutputFile": "files/hw3-hants.tex",
-    "Title": "人工智慧概論 HW3",
+    "InputFile":"files/hw4.tex",
+    "OutputFile": "files/hw4-hants.tex",
+    "Title": "人工智慧概論 HW4",
     "Author": "4112064214 侯竣奇",
     "FontPresets": {
         "setmainfont": "Times New Roman",
