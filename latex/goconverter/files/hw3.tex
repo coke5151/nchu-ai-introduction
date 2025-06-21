@@ -1,4 +1,5 @@
 \documentclass[11pt]{article}
+
     \usepackage[breakable]{tcolorbox}
     \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
     
@@ -450,7 +451,7 @@ Softmax 函數進行多類別機率輸出的輸出層。這份 ipynb
 下載資料集}\label{step-0-ux4e0bux8f09ux8cc7ux6599ux96c6}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{23}{\boxspacing}
+\prompt{In}{incolor}{1}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} 從 Github mirror 下載資料集（原作者 http://yann.lecun.com/exdb/mnist/ 似乎資料已刪除）}
 
@@ -544,7 +545,7 @@ Softmax 函數進行多類別機率輸出的輸出層。這份 ipynb
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{24}{\boxspacing}
+\prompt{In}{incolor}{2}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n}{train\PYZus{}features}\PY{p}{,} \PY{n}{train\PYZus{}labels}\PY{p}{,} \PY{n}{test\PYZus{}features}\PY{p}{,} \PY{n}{test\PYZus{}labels} \PY{o}{=} \PY{n}{get\PYZus{}mnist}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
@@ -568,7 +569,7 @@ Done.
     \end{Verbatim}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{25}{\boxspacing}
+\prompt{In}{incolor}{3}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{os}
 
@@ -577,7 +578,7 @@ Done.
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{26}{\boxspacing}
+\prompt{In}{incolor}{4}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{numpy}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{np}
 
@@ -593,7 +594,7 @@ Done.
 reshape}\label{step-1-1-read-data-and-reshape}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{27}{\boxspacing}
+\prompt{In}{incolor}{5}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} 讀取已儲存的 .npz 檔案}
 \PY{n}{mnist\PYZus{}data} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{load}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{data/mnist\PYZus{}dataset.npz}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
@@ -620,7 +621,42 @@ test\_y\_orig.shape: (10000,)
     \end{Verbatim}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{28}{\boxspacing}
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{plt}
+
+\PY{c+c1}{\PYZsh{} 建立一個 12x5 的畫布}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 迴圈顯示前 10 張圖片}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} 建立一個 2x5 的子圖網格，並定位到第 i+1 的位置}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 顯示 train\PYZus{}x\PYZus{}orig 中的第 i 張圖片，使用灰階色彩}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{train\PYZus{}x\PYZus{}orig}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{gray}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 設定子圖的標題為該圖片的正解標籤}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Label: }\PY{l+s+si}{\PYZob{}}\PY{n}{train\PYZus{}y\PYZus{}orig}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} 關閉座標軸}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{axis}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{off}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 為整個圖表加上一個大標題}
+\PY{n}{plt}\PY{o}{.}\PY{n}{suptitle}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Display of the First 10 Images}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} 顯示圖片}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_9_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} 將 28x28 的圖片拉平成 784 的向量}
 \PY{c+c1}{\PYZsh{} \PYZhy{}1 會讓 numpy 自動計算該維度的數量}
@@ -645,7 +681,7 @@ test\_x.shape: (10000, 784)
 Encode}\label{step-1-2-ux5c0d-label-ux9032ux884c-one-hot-encode}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{29}{\boxspacing}
+\prompt{In}{incolor}{8}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{one\PYZus{}hot\PYZus{}encode}\PY{p}{(}\PY{n}{labels}\PY{p}{,} \PY{n}{num\PYZus{}classes}\PY{p}{)}\PY{p}{:}
     \PY{c+c1}{\PYZsh{} 創建一個全為 0 的矩陣，shape 為 (樣本數, 類別數)}
@@ -703,7 +739,7 @@ Return:
 \end{itemize}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{30}{\boxspacing}
+\prompt{In}{incolor}{9}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{initialize\PYZus{}parameters}\PY{p}{(}\PY{n}{n\PYZus{}x}\PY{p}{,} \PY{n}{n\PYZus{}h}\PY{p}{,} \PY{n}{n\PYZus{}y}\PY{p}{)}\PY{p}{:}
     \PY{c+c1}{\PYZsh{} 為了讓每次的隨機結果都一樣，設定一個隨機種子}
@@ -728,7 +764,7 @@ Return:
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{31}{\boxspacing}
+\prompt{In}{incolor}{10}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} 測試函數}
 \PY{n}{parameters} \PY{o}{=} \PY{n}{initialize\PYZus{}parameters}\PY{p}{(}\PY{l+m+mi}{784}\PY{p}{,} \PY{l+m+mi}{128}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}
@@ -752,7 +788,7 @@ b2 Shape: (1, 10)
 Function}\label{step-2-2-activation-function}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{32}{\boxspacing}
+\prompt{In}{incolor}{11}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{relu}\PY{p}{(}\PY{n}{Z}\PY{p}{)}\PY{p}{:}
 \PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
@@ -803,7 +839,7 @@ Return:
 \end{itemize}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{33}{\boxspacing}
+\prompt{In}{incolor}{12}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{forward\PYZus{}propagation}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}\PY{p}{:}
     \PY{c+c1}{\PYZsh{} 從 parameters 字典中取出權重和 bias}
@@ -884,7 +920,7 @@ Return:
 \end{itemize}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{34}{\boxspacing}
+\prompt{In}{incolor}{13}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{compute\PYZus{}loss}\PY{p}{(}\PY{n}{A2}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{p}{:}
     \PY{c+c1}{\PYZsh{} 獲取樣本數量}
@@ -967,7 +1003,7 @@ Propagation}\label{step-2-5-backward-propagation}
   Y -- 正解標籤 (one-hot)，維度 (樣本數, 10)
 \end{itemize}
 
-返回:
+Return:
 
 \begin{itemize}
 \tightlist
@@ -976,7 +1012,7 @@ Propagation}\label{step-2-5-backward-propagation}
 \end{itemize}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{35}{\boxspacing}
+\prompt{In}{incolor}{14}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{backward\PYZus{}propagation}\PY{p}{(}\PY{n}{parameters}\PY{p}{,} \PY{n}{cache}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{)}\PY{p}{:}
     \PY{n}{m} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}  \PY{c+c1}{\PYZsh{} 樣本數量}
@@ -1030,7 +1066,7 @@ Propagation}\label{step-2-5-backward-propagation}
   learning\_rate -- 學習率 (alpha)，一個純量
 \end{itemize}
 
-返回:
+Return:
 
 \begin{itemize}
 \tightlist
@@ -1039,7 +1075,7 @@ Propagation}\label{step-2-5-backward-propagation}
 \end{itemize}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{36}{\boxspacing}
+\prompt{In}{incolor}{15}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{update\PYZus{}parameters}\PY{p}{(}\PY{n}{parameters}\PY{p}{,} \PY{n}{grads}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{p}{)}\PY{p}{:}
     \PY{c+c1}{\PYZsh{} 從字典中取出參數}
@@ -1097,7 +1133,7 @@ Return:
 \end{itemize}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{37}{\boxspacing}
+\prompt{In}{incolor}{16}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{nn\PYZus{}model}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{n\PYZus{}h}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{,} \PY{n}{num\PYZus{}epochs}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{batch\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{128}\PY{p}{)}\PY{p}{:}
     \PY{n}{n\PYZus{}x} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
@@ -1175,7 +1211,7 @@ Return:
 \end{itemize}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{38}{\boxspacing}
+\prompt{In}{incolor}{17}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{def}\PY{+w}{ }\PY{n+nf}{predict}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{parameters}\PY{p}{)}\PY{p}{:}
     \PY{c+c1}{\PYZsh{} 執行前向傳播}
@@ -1192,7 +1228,7 @@ Return:
     \subsection{Step 3-2: 訓練模型}\label{step-3-2-ux8a13ux7df4ux6a21ux578b}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{39}{\boxspacing}
+\prompt{In}{incolor}{18}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n}{trained\PYZus{}parameters}\PY{p}{,} \PY{n}{costs} \PY{o}{=} \PY{n}{nn\PYZus{}model}\PY{p}{(}
     \PY{n}{train\PYZus{}x}\PY{p}{,}
@@ -1258,7 +1294,7 @@ Epoch 50/50 - Cost: 0.015181
     \end{Verbatim}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{40}{\boxspacing}
+\prompt{In}{incolor}{19}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{plt}
 \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{numpy}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{np}
@@ -1274,7 +1310,7 @@ Epoch 50/50 - Cost: 0.015181
 \end{tcolorbox}
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_34_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_35_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
@@ -1282,7 +1318,7 @@ Epoch 50/50 - Cost: 0.015181
 用測試集檢驗}\label{step-3-3-ux7528ux6e2cux8a66ux96c6ux6aa2ux9a57}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{41}{\boxspacing}
+\prompt{In}{incolor}{20}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} 對測試集進行預測}
 \PY{n}{test\PYZus{}predictions} \PY{o}{=} \PY{n}{predict}\PY{p}{(}\PY{n}{test\PYZus{}x}\PY{p}{,} \PY{n}{trained\PYZus{}parameters}\PY{p}{)}
@@ -1303,7 +1339,7 @@ Epoch 50/50 - Cost: 0.015181
 Recall}\label{step-3-4-ux8a08ux7b97-precision-ux8207-recall}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{42}{\boxspacing}
+\prompt{In}{incolor}{21}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n}{num\PYZus{}classes} \PY{o}{=} \PY{l+m+mi}{10}
 \PY{c+c1}{\PYZsh{} 建立一個 10x10 的矩陣，用來存放混淆矩陣的結果}
@@ -1338,7 +1374,7 @@ Recall}\label{step-3-4-ux8a08ux7b97-precision-ux8207-recall}
     \end{Verbatim}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{43}{\boxspacing}
+\prompt{In}{incolor}{22}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k+kn}{import}\PY{+w}{ }\PY{n+nn}{seaborn}\PY{+w}{ }\PY{k}{as}\PY{+w}{ }\PY{n+nn}{sns}
 
@@ -1359,12 +1395,12 @@ Recall}\label{step-3-4-ux8a08ux7b97-precision-ux8207-recall}
 \end{tcolorbox}
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_39_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_40_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{44}{\boxspacing}
+\prompt{In}{incolor}{23}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}classes}\PY{p}{)}\PY{p}{:}
     \PY{n}{true\PYZus{}positives} \PY{o}{=} \PY{n}{confusion\PYZus{}matrix}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{i}\PY{p}{]}
